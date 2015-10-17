@@ -1,6 +1,19 @@
 package client;
 
 import java.net.*;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import com.beust.jcommander.JCommander;
+
 import java.io.*;
 
 
@@ -10,6 +23,8 @@ import java.io.*;
  * the threads send and listen that perform most of the operation
  */
 public class ChatClient {
+	
+	private static final String DEFAULT_HOST = "localhost";
 	
 	private String 	clientName,			// name of the client on the server
 					roomName,			// name of the clients current room on the server
@@ -28,15 +43,31 @@ public class ChatClient {
 	 * @param serverPort the port to connect to the server on
 	 * @throws UnknownHostException
 	 * @throws IOException
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyStoreException 
+	 * @throws CertificateException 
+	 * @throws KeyManagementException 
 	 */
-	public ChatClient(String hostName, int serverPort) throws UnknownHostException, IOException{
+	public ChatClient(String hostName, int serverPort) throws UnknownHostException, IOException, NoSuchAlgorithmException, KeyManagementException, CertificateException, KeyStoreException{
 		this.clientName      = "";
 		this.roomName        = "";
 		this.makeRoomRequest = "";
 		
 		this.quitFlag 		 = false;
 		
-		this.socket   		 = new Socket(hostName, serverPort);
+		TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+		InputStream keystoreStream = ClassLoader.getSystemResourceAsStream("/resc/distribCert.jks");
+		keystore.load(keystoreStream, "COMP90015@unimelb".toCharArray());
+		trustManagerFactory.init(keystore);
+		TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+		SSLContext ctx = SSLContext.getInstance("SSL");
+		ctx.init(null, trustManagers, null);
+		SSLContext.setDefault(ctx);
+		
+		SocketFactory factory = ctx.getSocketFactory();
+		
+		this.socket   		 = factory.createSocket(hostName, serverPort);
 		this.send  			 = new Send(this);
 		this.listen			 = new Listen(this);
 		
@@ -82,22 +113,23 @@ public class ChatClient {
 	 * The main operation of the client
 	 * @param args
 	 * @throws InterruptedException
+	 * @throws KeyStoreException 
+	 * @throws CertificateException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyManagementException 
 	 */
-	public static void main (String args[]) throws InterruptedException {
+	public static void main (String args[]) throws InterruptedException, KeyManagementException, NoSuchAlgorithmException, CertificateException, KeyStoreException {
 		
 		Socket s = null;
 
 		try{
 
-			String hostName   = args[0];
-			int    serverPort = 4444;		// the default port number
+				CmdLineArgs settings = new CmdLineArgs();
+				new JCommander(settings, args);
+			
+			String hostName = settings.host.isEmpty() ? DEFAULT_HOST : settings.host.get(0);
 
-			// optional port change
-			if(args.length > 1){
-				serverPort = Integer.parseInt(args[1]);
-			}
-
-			ChatClient c = new ChatClient(hostName, serverPort); 
+			ChatClient c = new ChatClient(hostName, settings.port); 
 			
 			// add shutdown hook
 			Runtime.getRuntime().addShutdownHook(new ShutdownHookClient(c.getSend(), c.getListen()));

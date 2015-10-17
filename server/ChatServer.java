@@ -1,5 +1,20 @@
 package server;
 import java.net.*;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
+import javax.net.ServerSocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import com.beust.jcommander.JCommander;
+
+import client.CmdLineArgs;
+
 import java.io.*;
 
 import commands.Join;
@@ -16,16 +31,27 @@ public class ChatServer {
 				
 		try{
 			
-			// the default server port
-			int serverPort = 4444; 
+			CmdLineArgs settings = new CmdLineArgs();
+			new JCommander(settings, args);
 			
-			// if there is an additional argument in from the terminal
-			if(args.length > 0){
-				serverPort = Integer.parseInt(args[0]);
-			}
+			TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+			InputStream keystoreStream = ClassLoader.getSystemResourceAsStream("/resc/distribCert.jks");
+			keystore.load(keystoreStream, "COMP90015@unimelb".toCharArray());
+			trustManagerFactory.init(keystore);
+			TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+			SSLContext ctx = SSLContext.getInstance("SSL");
+			ctx.init(null, trustManagers, null);
+			SSLContext.setDefault(ctx); 
+			
+			//SSLContext ctx = SSLContext.getInstance("TLS");
+			
+			//ctx.init(null, new ChatTrustManager[]{new ChatTrustManager()}, null);
+			
+			ServerSocketFactory factory = ctx.getServerSocketFactory();
 			
 			// create the listenSocket
-			ServerSocket listenSocket = new ServerSocket(serverPort);
+			ServerSocket listenSocket = factory.createServerSocket(settings.port);
 			
 			// create server info 
 			ServerInfo sInfo = new ServerInfo();
@@ -59,7 +85,21 @@ public class ChatServer {
 			} 
 		}
 		
-		catch(IOException e){
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		
