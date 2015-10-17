@@ -43,11 +43,7 @@ public class ChatServer {
 			SSLContext ctx = SSLContext.getInstance("SSL");
 			ctx.init(null, trustManagers, null);
 			SSLContext.setDefault(ctx); 
-			
-			//SSLContext ctx = SSLContext.getInstance("TLS");
-			
-			//ctx.init(null, new ChatTrustManager[]{new ChatTrustManager()}, null);
-			
+								
 			ServerSocketFactory factory = ctx.getServerSocketFactory();
 			
 			// create the listenSocket
