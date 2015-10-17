@@ -8,6 +8,7 @@ import java.security.cert.CertificateException;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -25,7 +26,8 @@ import commands.NewIdentity;
  * then creates a thread for each connection
  */
 public class ChatServer {
-		
+	
+	private static final boolean USE_CONTEXT = false;
 	
 	public static void main (String args[]) {
 				
@@ -34,17 +36,25 @@ public class ChatServer {
 			CmdLineArgs settings = new CmdLineArgs();
 			new JCommander(settings, args);
 			
-			TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-			InputStream keystoreStream = ClassLoader.getSystemResourceAsStream("/resc/distribCert.jks");
-			keystore.load(keystoreStream, "COMP90015@unimelb".toCharArray());
-			trustManagerFactory.init(keystore);
-			TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-			SSLContext ctx = SSLContext.getInstance("SSL");
-			ctx.init(null, trustManagers, null);
-			SSLContext.setDefault(ctx); 
-								
-			ServerSocketFactory factory = ctx.getServerSocketFactory();
+			ServerSocketFactory factory = null;
+			
+			if (USE_CONTEXT) {
+				TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+				KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+				InputStream keystoreStream = ClassLoader.getSystemResourceAsStream("/resc/distribCert.jks");
+				keystore.load(keystoreStream, "COMP90015@unimelb".toCharArray());
+				trustManagerFactory.init(keystore);
+				TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+				SSLContext ctx = SSLContext.getInstance("SSL");
+				ctx.init(null, trustManagers, null);
+				SSLContext.setDefault(ctx); 
+				factory = ctx.getServerSocketFactory();
+			}
+			else {
+				System.setProperty("java.net.ssl.keyStore", "./distribCert");
+				System.setProperty("java.net.ssl.keyStorePassword", "COMP90015@unimelb");
+				factory = SSLServerSocketFactory.getDefault();
+			}
 			
 			// create the listenSocket
 			ServerSocket listenSocket = factory.createServerSocket(settings.port);
