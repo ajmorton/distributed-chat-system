@@ -20,7 +20,10 @@ import commands.ServerMessage;
  * Listen is a thread in ChatClient that listens for messages from the server and
  * prints to stdout along with any required operations required by the message
  */
-public class Listen extends Thread{
+public class Listen extends Thread
+{
+	
+	private static final boolean DEBUG = false;
 	
 	BufferedReader 	in;			// reads in messages from the server
 	ChatClient 		c;			// the client that the thread is in
@@ -55,23 +58,28 @@ public class Listen extends Thread{
 		try {
 			while(!(quitFlag = c.getQuitFlag())){
 				// if a non-blocking read is possible
-				if(in.ready()){
-					// convert the JSON to its corresponding message object
-					String  json    = in.readLine();
-					System.out.println("received: " + json);
-					Command command = getCommand(sanitize(json));
-					
-					// if JSON cannot be matched to a command object
-					if(command == null){
-						System.out.println("JSON Message Error");
-						System.out.println("JSON is " + json);
-						continue;
-					}
-								
-					// performs the operations required for the message
-					command.execute(c);
-					
+				
+				if (DEBUG) {System.out.println("***READY TO RECIEVE***");}
+				// convert the JSON to its corresponding message object
+				if (DEBUG) {System.out.println("***RECEIVING***");}
+				String  json    = in.readLine();
+				if (DEBUG) {
+					System.out.println("***RECEIVED***");
+					System.out.println(json);
 				}
+
+				Command command = getCommand(sanitize(json));
+
+				// if JSON cannot be matched to a command object
+				if(command == null){
+					System.out.println("JSON Message Error");
+					System.out.println("JSON is " + json);
+					continue;
+				}
+
+				// performs the operations required for the message
+				command.execute(c);
+					
 				// if no non-blokcing read available wait for .1 seconds
 				sleep(100);
 			}

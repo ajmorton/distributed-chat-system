@@ -9,6 +9,7 @@ import java.security.cert.CertificateException;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -28,13 +29,13 @@ public class ChatClient {
 	private static final String DEFAULT_HOST = "localhost";
 	private static final boolean USE_CONTEXT = true;
 	
-	private String 	clientName,			// name of the client on the server
-					roomName,			// name of the clients current room on the server
-					makeRoomRequest;	// name of the room the clients is trying the create
-	private Socket 	socket;				// socket the client uses to connect to the server
-	private Send 	send;				// thread to send from stdin to the server
-	private Listen 	listen;				// thread that listen for server messages
-	private Boolean quitFlag;			// flag that terminates the client
+	private String 		clientName,			// name of the client on the server
+						roomName,			// name of the clients current room on the server
+						makeRoomRequest;	// name of the room the clients is trying the create
+	private SSLSocket 	socket;				// socket the client uses to connect to the server
+	private Send 		send;				// thread to send from stdin to the server
+	private Listen 		listen;				// thread that listen for server messages
+	private Boolean 	quitFlag;			// flag that terminates the client
 	
 	
 	// CONSTRUCTOR
@@ -87,19 +88,20 @@ public class ChatClient {
 			factory = SSLSocketFactory.getDefault();
 		}
 				
-		this.socket   		 = factory.createSocket(hostName, serverPort);
+		this.socket   		 = (SSLSocket) factory.createSocket(hostName, serverPort);
+		this.socket.startHandshake();
 		this.send  			 = new Send(this);
 		this.listen			 = new Listen(this);
 		
 	}
 	
 	// GETTERS
-	public Socket  getSocket()			{return socket;}
-	public String  getClientName()		{return clientName;}
-	public Send    getSend()			{return send;}
-	public Listen  getListen()			{return listen;}
-	public Boolean getQuitFlag()		{return quitFlag;}
-	public String  getMakeRoomRequest() {return makeRoomRequest;}
+	public SSLSocket  	getSocket()				{return socket;}
+	public String  		getClientName()			{return clientName;}
+	public Send    		getSend()				{return send;}
+	public Listen  		getListen()				{return listen;}
+	public Boolean 		getQuitFlag()			{return quitFlag;}
+	public String  		getMakeRoomRequest() 	{return makeRoomRequest;}
 	
 	// SETTERS
 	public void setRoom(String newRoom)			{roomName = newRoom;}
