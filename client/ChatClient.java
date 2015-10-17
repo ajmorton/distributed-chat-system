@@ -60,20 +60,30 @@ public class ChatClient {
 		SocketFactory factory = null;
 		
 		if (USE_CONTEXT) {
+			// Create a trust manager factory to process the keystore later
 			TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			// Create a default keystore instance to take the certificate
 			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-			InputStream keystoreStream = ClassLoader.getSystemResourceAsStream("/resc/distribCert.jks");
-			keystore.load(keystoreStream, "COMP90015@unimelb".toCharArray());
+			// Create a stream from the certificate using the class loader
+			InputStream keystoreStream = ClassLoader.getSystemResourceAsStream("resc/distribCert.jks");
+			// Load the keystore with the password
+			keystore.load(keystoreStream, "aaaaaa".toCharArray());
+			// Set the trust manager to use the keystore
 			trustManagerFactory.init(keystore);
+			// Get the new trust manager
 			TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-			SSLContext ctx = SSLContext.getInstance("SSL");
+			// Create a corresponding SSL context
+			SSLContext ctx = SSLContext.getInstance("TLS");
+			// Set the context to use the trust manager
 			ctx.init(null, trustManagers, null);
+			// Set the new context as the default
 			SSLContext.setDefault(ctx);
+			// Create a SocketFactory using our certificate
 			factory = ctx.getSocketFactory();
 		}
 		else {
-			System.setProperty("java.net.ssl.keyStore", "./distribCert");
-			System.setProperty("java.net.ssl.keyStorePassword", "COMP90015@unimelb");
+			System.setProperty("javax.net.ssl.trustStore", "/Users/rob/Desktop/distribCert.jks");
+			System.setProperty("javax.net.ssl.trustStorePassword", "aaaaaa");
 			factory = SSLSocketFactory.getDefault();
 		}
 				
