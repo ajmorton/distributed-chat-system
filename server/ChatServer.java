@@ -30,7 +30,7 @@ import commands.NewIdentity;
  */
 public class ChatServer {
 	
-	private static final boolean USE_CONTEXT = false;
+	private static final boolean USE_CONTEXT = true;
 	
 	public static void main (String args[]) throws UnrecoverableKeyException {
 				

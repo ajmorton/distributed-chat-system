@@ -10,11 +10,14 @@ import java.net.Socket;
  * A client-server connection
  * Handles all the I/O of the server individually for each connection
  */
-public class Connection extends Thread {
+public class Connection extends Thread
+{
+	
+	private static final boolean DEBUG = false;
 	
 	private BufferedReader in;				// used to read messages from client
 	private PrintWriter    out;				// used to send messages to client
-	private Socket         clientSocket;	// the socket used to connect to client
+	private Socket      clientSocket;	// the socket used to connect to client
 	private ServerInfo     sInfo;			// information about the server
 	private ClientInfo     cInfo;			// information about the client
 	private Boolean        terminateFlag; 	// flag that terminates the connection
@@ -40,7 +43,7 @@ public class Connection extends Thread {
 	// GETTERS
 	public ClientInfo getClientInfo()	{return cInfo;}
 	public ServerInfo getServerInfo()	{return sInfo;}
-	public Socket 	  getSocket()		{return clientSocket;}
+	public Socket 	  getSocket()	{return clientSocket;}
 	
 	
 	/**
@@ -48,7 +51,12 @@ public class Connection extends Thread {
 	 * @param message the JSON string
 	 */
 	public void send(String message) throws IOException{
+		if (DEBUG) {
+			System.out.println("***SENDING***");
+			System.out.println(message);
+			}
 		out.println(message);
+		if (DEBUG) {System.out.println("***SENT***");}
 	}
 
 	/**
@@ -68,37 +76,33 @@ public class Connection extends Thread {
 			
 			String json;
 			while(!terminateFlag){
-				if(in.ready()){ 
-					// non-blocking read available
-					
-					json = in.readLine();
-					
-					// generate Command object from JSON String
-					Command command = getCommand(json);	
+				// non-blocking read available
 
-					//invalid input, ignore and move on
-					if(command == null){
-						System.out.println("JSON Message Error");
-						continue;
-					}
-					
-					// otherwise execute command
-					// operation for the command is found in the respective command classes
-					command.execute(this);
-										
-				}else{
-					// no message, sleep .1s and continue
-					sleep(100);
+				if (DEBUG) {System.out.println("***RECEIVING***");}
+				json = in.readLine();
+				if (DEBUG) {
+					System.out.println("***RECEIVED***");
+					System.out.println(json);
 				}
-				
+
+				// generate Command object from JSON String
+				Command command = getCommand(json);	
+
+				//invalid input, ignore and move on
+				if(command == null){
+					System.out.println("JSON Message Error");
+					continue;
+				}
+
+				// otherwise execute command
+				// operation for the command is found in the respective command classes
+				command.execute(this);
 			}
 
 		}catch (EOFException e){
 			System.out.println("EOF:"+e.getMessage());
 		} catch(IOException e) {
 			System.out.println("readline:"+e.getMessage());
-		} catch (InterruptedException e) {
-			System.out.println("Interupted:"+ e.getMessage());
 		} finally {
 			try {
 				clientSocket.close();

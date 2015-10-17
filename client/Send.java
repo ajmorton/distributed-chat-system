@@ -16,9 +16,12 @@ import commands.*;
  * and converting them to their respective JSON command then 
  * sending them to the server
  */
-public class Send extends Thread{
+public class Send extends Thread
+{
 
 	// TODO max buffer size 1000
+	
+	private static final boolean DEBUG = false;
 	
 	BufferedReader in;    		// used to read in from stdin
 	PrintWriter    out;			// used to send messages to the server
@@ -29,7 +32,7 @@ public class Send extends Thread{
 	// CONSTRUCTOR
 	
 	public Send(ChatClient c) throws UnsupportedEncodingException, IOException{
-		Socket s 	  = c.getSocket();
+		Socket s   = c.getSocket();
 		this.in       = new BufferedReader(new InputStreamReader(System.in));
 		this.out 	  = new PrintWriter(new OutputStreamWriter(s.getOutputStream(), "UTF8"), true);
 		this.c   	  = c;
@@ -87,7 +90,12 @@ public class Send extends Thread{
 					// convert the command object to a JSON string using gson
 					Gson gson   = new Gson();
 					String json = gson.toJson(commandObj);
+					if (DEBUG) {
+						System.out.println("***SENDING***");
+						System.out.println(json);
+						}
 					out.println(json);
+					if (DEBUG) {System.out.println("***SENT***");}
 	
 				} else {
 					// if a non-blocking read is not ready wait .1 seconds
