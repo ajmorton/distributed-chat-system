@@ -1,8 +1,9 @@
 # DistSyst
 Distributed Systems Assignment 2
 
-Main classes are ChatServer and ChatClient.
-You know the rest probably.
+A Chat server with client and server applications.
 
+main classes are client.ChatClient.java and server.ChatServer.java
 
-altering readme.txt to check terminal git updates
+commands are send in JSON format.
+
