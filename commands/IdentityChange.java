@@ -12,9 +12,10 @@ import server.ServerInfo;
  * The IdentityChange class
  * Changes a users name if the new name is valid
  */
-public class IdentityChange extends Command{
+public class IdentityChange extends Command
+{
 	final static int 	argCount = 1; 	// the number of arguments to supply to the command
-	private		 String identity;		// the new identity to change to
+	protected String 	identity;		// the new identity to change to
 	
 	
 	// CONSTRUCTOR
