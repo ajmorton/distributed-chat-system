@@ -1,4 +1,4 @@
-package common;
+package test;
 
 import java.io.*;
 import java.security.KeyStore;

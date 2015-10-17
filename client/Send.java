@@ -1,15 +1,20 @@
 package client;
 
 import java.io.BufferedReader;
+import java.io.Console;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import com.google.gson.Gson;
 import commands.*;
+import common.PasswordHash;
 
 /**
  * The Send thread deals with reading in commands from stdin 
@@ -23,11 +28,16 @@ public class Send extends Thread
 	
 	private static final boolean DEBUG = false;
 	
-	BufferedReader in;    		// used to read in from stdin
-	PrintWriter    out;			// used to send messages to the server
-	ChatClient 	   c;			// the client that send is a thread of
-	Boolean 	   quitFlag;	// the flag to quit the client
+	// Set to true to store password hash in local file
+	private static final boolean STORE_HASH = true;
 	
+	// Console reference to read passwords quietly
+	private static final Console console = System.console();
+	
+	private BufferedReader 	in;    		// used to read in from stdin
+	private PrintWriter    	out;		// used to send messages to the server
+	private ChatClient 	   	c;			// the client that send is a thread of
+	private Boolean 	   	quitFlag;	// the flag to quit the client
 	
 	// CONSTRUCTOR
 	
@@ -143,11 +153,57 @@ public class Send extends Thread
 		case "#delete":
 			return new Delete(restOfInput);			
 		case "#quit":
-			return new Quit();			
+			return new Quit();
+		case "#authenticate":
+			// If user doesn't specify a new identity, they keep the old one
+			if (argArray.length == 0) {
+				return new Authenticate(doPassword(c.getClientName()));
+			}
+			// Otherwise, change their name and authenticate them
+			return new Authenticate(doPassword(c.getClientName()), restOfInput);
 		default:
 			// if the first word doesn't match any of the above switch cases it is a message
 			return new Message(firstWord + " " + restOfInput);		
 		}		
+	}
+	
+	private static String doPassword(String identity)
+	{
+		// TODO Write a file with the user's name and password hash value...
+		
+		// Get a new password from the user and hash it
+		// (without making a reference to the password in memory)
+		String hash = null;
+		try {
+			hash = PasswordHash.createHash(console.readPassword("Enter a new password: "));
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		
+		// Make sure the user knows the password
+		try {
+			if(PasswordHash.validatePassword(console.readPassword("Confirm password: "), hash)) {
+				if(STORE_HASH) {
+					Gson gson = new Gson();
+					PrintWriter pw = new PrintWriter("./chat.hash", "UTF-8");
+					pw.println(gson.toJson(new CredentialHash(identity, hash)));
+					pw.close();
+				}
+				
+				return hash;
+			}
+			System.out.println("Passwords do not match");
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }		
 
