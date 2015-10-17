@@ -26,7 +26,7 @@ import java.io.*;
 public class ChatClient {
 	
 	private static final String DEFAULT_HOST = "localhost";
-	private static final boolean USE_CONTEXT = false;
+	private static final boolean USE_CONTEXT = true;
 	
 	private String 	clientName,			// name of the client on the server
 					roomName,			// name of the clients current room on the server

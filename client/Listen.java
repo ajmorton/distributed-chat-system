@@ -58,6 +58,7 @@ public class Listen extends Thread{
 				if(in.ready()){
 					// convert the JSON to its corresponding message object
 					String  json    = in.readLine();
+					System.out.println("received: " + json);
 					Command command = getCommand(sanitize(json));
 					
 					// if JSON cannot be matched to a command object

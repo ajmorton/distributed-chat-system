@@ -30,7 +30,7 @@ import commands.NewIdentity;
  */
 public class ChatServer {
 	
-	private static final boolean USE_CONTEXT = false;
+	private static final boolean USE_CONTEXT = true;
 	
 	public static void main (String args[]) throws UnrecoverableKeyException {
 				
@@ -104,6 +104,9 @@ public class ChatServer {
 				// set the new clients id and inform client
 				NewIdentity newID = new NewIdentity(newClientName, c.getName());
 				c.setName(newClientName);
+				
+				System.out.println("new connection");
+				
 				newID.sendJSON(c);
 
 				// add client to clientList and move to MainHall

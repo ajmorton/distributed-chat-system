@@ -48,7 +48,9 @@ public class Connection extends Thread {
 	 * @param message the JSON string
 	 */
 	public void send(String message) throws IOException{
+		System.out.println("sending: " + message);
 		out.println(message);
+		System.out.println("sent");
 	}
 
 	/**
