@@ -13,13 +13,11 @@ import commands.RoomChange;
  */
 public class ShutdownHook extends Thread{
 	ServerInfo    sInfo;		// information about the server
-	ServerCleanUp sCleanup;		// the server cleaning thread
 	ServerSocket  sSocket;		// the servers socket to detect new connections
 		
 	// CONSTRUCTOR
-	public ShutdownHook(ServerInfo sInfo, ServerCleanUp sCleanup, ServerSocket listenSocket){
+	public ShutdownHook(ServerInfo sInfo, /*ServerCleanUp sCleanup,*/ ServerSocket listenSocket){
 		this.sInfo    = sInfo;
-		this.sCleanup = sCleanup;
 		this.sSocket  = listenSocket;
 	}
 	
@@ -45,10 +43,7 @@ public class ShutdownHook extends Thread{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		// terminate cleaning thread		
-		sCleanup.interrupt();
-		
+			
 	}
 	
 	

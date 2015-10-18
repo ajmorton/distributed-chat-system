@@ -83,32 +83,34 @@ public class ChatServer {
 			// create server info 
 			ServerInfo sInfo = new ServerInfo();
 			
-			// create server cleaning thread
-			ServerCleanUp sCleanUp = new ServerCleanUp(sInfo);
-			
 			// attach shutdown hook
-			Runtime.getRuntime().addShutdownHook(new ShutdownHook(sInfo, sCleanUp, listenSocket));			
+			Runtime.getRuntime().addShutdownHook(new ShutdownHook(sInfo, listenSocket));			
 			
 			
 			
 			// listen for new connections
 			while(true) {
-				Socket clientSocket = listenSocket.accept();
-				
-				String     newClientName = sInfo.getNewName();
-				ClientInfo newClientInfo = new ClientInfo(sInfo);
-				
-				// create new client connection
-				Connection c = new Connection(clientSocket, sInfo, newClientInfo);
-				
-				// set the new clients id and inform client
-				NewIdentity newID = new NewIdentity(newClientName, c.getName());
-				c.setName(newClientName);
-				newID.sendJSON(c);
+				try{
+					Socket clientSocket = listenSocket.accept();
 
-				// add client to clientList and move to MainHall
-				sInfo.addClientList(c);
-				(new Join("MainHall")).execute(c);
+					String     newClientName = sInfo.getNewName();
+					ClientInfo newClientInfo = new ClientInfo(sInfo);
+
+					// create new client connection
+					Connection c = new Connection(clientSocket, sInfo, newClientInfo);
+
+					// set the new clients id and inform client
+					NewIdentity newID = new NewIdentity(newClientName, c.getName());
+					c.setName(newClientName);
+
+					newID.sendJSON(c);
+
+					// add client to clientList and move to MainHall
+					sInfo.addClientList(c);
+					(new Join("MainHall")).execute(c);
+				} catch (SocketException e){
+					// TODO only occurs at server termination
+				}
 			} 
 		}
 		

@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import commands.Command;
 import commands.NewIdentity;
-import commands.Ping;
 import commands.RoomChange;
 import commands.RoomContents;
 import commands.RoomList;
@@ -58,6 +57,7 @@ public class Listen extends Thread
 		try {
 			while(!(quitFlag = c.getQuitFlag())){
 				// if a non-blocking read is possible
+				
 				if (DEBUG) {System.out.println("***READY TO RECIEVE***");}
 				// convert the JSON to its corresponding message object
 				if (DEBUG) {System.out.println("***RECEIVING***");}
@@ -79,7 +79,7 @@ public class Listen extends Thread
 				// performs the operations required for the message
 				command.execute(c);
 					
-				// if no non-blokcing read available wait for .1 seconds
+				// if no non-blocking read available wait for .1 seconds
 				sleep(100);
 			}
 			
@@ -160,8 +160,6 @@ public class Listen extends Thread
 			return gson.fromJson(json, RoomContents.class);
 		case "roomlist":			
 			return gson.fromJson(json, RoomList.class);
-		case "ping":				
-			return gson.fromJson(json, Ping.class);
 		}
 		
 		//invalid JSON received

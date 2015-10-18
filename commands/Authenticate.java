@@ -9,7 +9,7 @@ import server.Connection;
 import server.ServerInfo;
 
 /**
- * Authenticate changes a user to an authenticated user, optionally
+ * Authenticate changes a user to an authenticated user, optionally (TODO guest exclusion) 
  * changing their username.
  * 
  * It takes a password to be (hashed and) kept for reference by the server.

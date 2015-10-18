@@ -43,20 +43,42 @@ public class Connection extends Thread
 	// GETTERS
 	public ClientInfo getClientInfo()	{return cInfo;}
 	public ServerInfo getServerInfo()	{return sInfo;}
-	public Socket 	  getSocket()	{return clientSocket;}
+	public Socket 	  getSocket()	    {return clientSocket;}
 	
 	
 	/**
-	 * sends a JSON string to the client
+	 * calls sendMessage to send a JSON string message to the client
+	 * detects and removes dropped connections
 	 * @param message the JSON string
+	 * @return 
 	 */
 	public void send(String message) throws IOException{
+		
+		if(sendMessage(message)){
+			new Quit().execute(this);
+		}
+		
+	}
+	
+	/**
+	 * sends a JSON object message to the client, returns true if there is an error in sending
+	 * @param message the JSON object
+	 * @return droppedConnection if the connection is broken
+	 */
+	public boolean sendMessage(String message) throws IOException{
+		
+		boolean connDropped = false;
+		
 		if (DEBUG) {
-			System.out.println("***SENDING***");
-			System.out.println(message);
-			}
+			System.out.println(this.getName() + ": " + message);
+		}
+
 		out.println(message);
+		
+		connDropped = out.checkError();
+		
 		if (DEBUG) {System.out.println("***SENT***");}
+		return connDropped;
 	}
 
 	/**
@@ -77,7 +99,6 @@ public class Connection extends Thread
 			String json;
 			while(!terminateFlag){
 				// non-blocking read available
-
 				if (DEBUG) {System.out.println("***RECEIVING***");}
 				json = in.readLine();
 				if (DEBUG) {
@@ -103,7 +124,10 @@ public class Connection extends Thread
 			System.out.println("EOF:"+e.getMessage());
 		} catch(IOException e) {
 			System.out.println("readline:"+e.getMessage());
-		} finally {
+		} catch (NullPointerException e){
+			// TODO only occurs at Connection termination
+			// due to readline() blocking, ready() not available for SSL
+		}finally {
 			try {
 				clientSocket.close();
 			}catch (IOException e){

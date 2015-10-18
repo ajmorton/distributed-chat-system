@@ -1,7 +1,11 @@
 package server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
+
+import commands.Quit;
 
 
 /**
@@ -37,8 +41,27 @@ public class Room{
 	 * @param message the JSON String message
 	 */
 	public void broadcast(String message) throws IOException{
-		for(Connection c : roomClients){
-			c.send(message);
+
+		ArrayList<Connection> toRemove = new ArrayList<Connection>();
+		
+		Iterator<Connection> i = roomClients.iterator();
+		Connection conn;
+		
+		while(i.hasNext()){
+			conn = i.next();
+			
+			if(conn.sendMessage(message)){ // if send message fails remove the connection
+				i.remove();
+				toRemove.add(conn);
+			}	
+		}
+		
+		// remove connections marked as dropped during broadcast
+		
+		Quit quit = new Quit();
+		
+		for(Connection droppedConn: toRemove){
+			quit.execute(droppedConn);
 		}
 	}
 	
