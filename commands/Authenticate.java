@@ -2,8 +2,6 @@ package commands;
 
 import java.io.IOException;
 
-import com.google.gson.Gson;
-
 import server.ClientInfo;
 import server.Connection;
 import server.ServerInfo;

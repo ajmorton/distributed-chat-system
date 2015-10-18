@@ -2,7 +2,6 @@ package test;
 
 import com.google.gson.Gson;
 
-import commands.Authenticate;
 import commands.IdentityChange;
 
 public class AuthenticateGsonTest
