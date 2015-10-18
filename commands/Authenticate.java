@@ -57,37 +57,39 @@ public class Authenticate extends IdentityChange
 		ServerInfo sInfo = c.getServerInfo();
 		
 		// Client has specified a new identity
-		if(!"".equals(identity)) {
-			// Fail if new name doesn't match rules or if another user is logged in already
-			if (!validRegexName(identity) || isConnectedName(identity, sInfo))
-			{
+		//if(!identity.isEmpty()) {
+		
+		// Fail if new name doesn't match rules or if another user is logged in already
+		if (!validRegexName(identity) || isConnectedName(identity, sInfo))
+		{
+			// TODO fail here
+			return;
+		}
+
+		// If the name is recorded in the authentication index,
+		// test the hash and log the user in if it matches
+		if (isAuthName(identity, sInfo)) {
+			if (!sInfo.tryExistingAuth(identity, hash)) {
 				// TODO fail here
 				return;
 			}
-			
-			// If the name is recorded in the authentication index,
-			// test the hash and log the user in if it matches
-			if (isAuthName(identity, sInfo)) {
-				if (!sInfo.tryExistingAuth(identity, hash)) {
-					// TODO fail here
-					return;
-				}
-				else {
-					// TODO succeed here
-					super.execute(c);
-					return;
-				}
+			else {
+				// TODO succeed here
+				super.execute(c);
+				return;
 			}
-			// Otherwise the name doesn't exist,
-			// so change the client's ID
-			super.execute(c);
 		}
+		// Otherwise the name doesn't exist,
+		// so change the client's ID
+		super.execute(c);
+		
+		/*}
 		// If the user provides no new name but is already authenticated,
 		// then they are dumb
 		else if (cInfo.isAuthenticated()) {
 			// TODO send the client a message that they are dumb
 			return;
-		}
+		}*/
 		
 		// Add the user to the authentication index
 		sInfo.addAuthUser(identity, hash);

@@ -161,9 +161,10 @@ public class Send extends Thread
 			return new Quit();
 		case "#authenticate":
 			// If user doesn't specify a new identity, they keep the old one
+			/*
 			if (argArray.length == 0) {
 				return new Authenticate(doPassword(c.getClientName()));
-			}
+			}*/
 			// Otherwise, change their name and authenticate them
 			return new Authenticate(doPassword(c.getClientName()), restOfInput);
 		default:
