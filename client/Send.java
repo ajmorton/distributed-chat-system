@@ -29,7 +29,7 @@ public class Send extends Thread
 	private static final boolean DEBUG = false;
 	
 	// Set to true to store password hash in local file
-	private static final boolean STORE_HASH = true;
+	private static final boolean STORE_HASH = false;
 	
 	// Console reference to read passwords quietly
 	private static final Console console = System.console();
@@ -171,18 +171,16 @@ public class Send extends Thread
 	{
 		// TODO Write a file with the user's name and password hash value...
 		
-		// Get a new password from the user and hash it
-		// (without making a reference to the password in memory)
 		String hash = null;
 		try {
+			// Get a new password from the user and hash it
+			// (without making a reference to the password in memory)
 			hash = PasswordHash.createHash(console.readPassword("Enter a new password: "));
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			e.printStackTrace();
-		}
 		
-		// Make sure the user knows the password
-		try {
+			// Make sure the user knows the password
 			if(PasswordHash.validatePassword(console.readPassword("Confirm password: "), hash)) {
+				// Store the hash locally
+				// IMPLEMENTATION NOT YET STABLE
 				if(STORE_HASH) {
 					Gson gson = new Gson();
 					PrintWriter pw = new PrintWriter("./chat.hash", "UTF-8");
@@ -194,13 +192,10 @@ public class Send extends Thread
 			}
 			System.out.println("Passwords do not match");
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
