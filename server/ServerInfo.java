@@ -167,16 +167,38 @@ public class ServerInfo
 		}
 	}
 	
+	/**
+	 * checks if an existing authenticated user can be "logged into"
+	 * TODO this assumes that authenticated user is not currently in use
+	 * 		although we could call it a "group account" feature 
+	 * @param name the name of the authenticated user
+	 * @param hash the hashed password of the authenticated user
+	 * @return  true if the name and hash are valid
+	 * 			false if they are not
+	 */
 	public boolean tryExistingAuth(String name, String hash)
 	{
 		return inAuthIndex(name) && matchesPassword(name, hash);
 	}
 	
+	/**
+	 * checks if name is in the authenticated userList
+	 * @param name the name to check
+	 * @return  true if name in authUsers
+	 * 			false if not in authUsers
+	 */
 	public boolean inAuthIndex(String name)
 	{
 		return authUsers.containsKey(name);
 	}
 	
+	/**
+	 * checks if the supplied password hash is correct for the specified user
+	 * @param name the user to be "logged in" to 
+	 * @param hash the password to "log in" with
+	 * @return true if the password is correct
+	 * 		   false if not
+	 */
 	private boolean matchesPassword(String name, String hash)
 	{
 		try {

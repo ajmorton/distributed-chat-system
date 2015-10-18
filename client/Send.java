@@ -28,6 +28,7 @@ public class Send extends Thread
 	// TODO max buffer size 1000
 	
 	private static final boolean DEBUG = false;
+//	private static final boolean STORE_HASH = true;
 	
 	// Console reference to read passwords quietly
 	private static final Console console = System.console();
@@ -157,20 +158,10 @@ public class Send extends Thread
 		case "#quit":
 			return new Quit();
 		case "#authenticate":
-			// If user doesn't specify a new identity, they keep the old one
-			/* TODO can remove?
-			if (argArray.length == 0) {
-				return new Authenticate(doPassword(c.getClientName()));
-			}*/
 			// Otherwise, change their name and authenticate them
-			
 			String password = doPassword(c.getClientName());
-			if(password == null){
-				return new Message(firstWord + " " + restOfInput);
-			} 
-			
+			if(password == null) {return new Message(firstWord + " " + restOfInput);} 
 			return new Authenticate(password, restOfInput);
-			
 		default:
 			// if the first word doesn't match any of the above switch cases it is a message
 			return new Message(firstWord + " " + restOfInput);		
@@ -186,19 +177,17 @@ public class Send extends Thread
 		// Make sure the user knows the password
 		if(hash.equals(takePassword("Confirm password: "))) {
 
-			/*
-				if(STORE_HASH) {
-					Gson gson = new Gson();
-					PrintWriter pw = new PrintWriter("./chat.hash", "UTF-8");
-					pw.println(gson.toJson(new CredentialHash(identity, hash)));
-					pw.close();
-				}
-			*/
+//			TODO CredentialHash not imported, don't know where to import from
+//			if(STORE_HASH) {
+//				Gson gson = new Gson();
+//				PrintWriter pw = new PrintWriter("./chat.hash", "UTF-8");
+//				pw.println(gson.toJson(new CredentialHash(identity, hash)));
+//				pw.close();
+//			}
 			
 			return hash;
 		}
 			System.out.println("Passwords do not match");
-			// TODO currently mismatched passwords sends null as the password
 		return null;
 	}
 	

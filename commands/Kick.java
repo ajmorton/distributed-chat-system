@@ -36,9 +36,19 @@ public class Kick extends Command{
 	 * Only works if caller is the owner of the room
 	 */
 	public void execute(Connection c) throws IOException{
+
+		
+		
 		ServerInfo sInfo   = c.getServerInfo();
 		Room       banRoom = sInfo.getRoom(roomid);
 		Connection banUser = sInfo.getClient(identity);
+
+		String kickersName = c.getName();
+		if(!sInfo.inAuthIndex(kickersName)){
+			// user not authenticated, cannot kick other users
+			return;
+		}
+
 		
 		// if room exists
 		Boolean roomExists = (banRoom != null); 

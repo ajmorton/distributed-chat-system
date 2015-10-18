@@ -1,18 +1,15 @@
 Authenticated Users:
 	- Password
 		- Make second login not ask for confirm password
-	- Privileges for authenticated users only wrt. rooms
-		- Delete room
-		- Kick user
 	- Changing identity from authenticated user
 		- Remove previous identity from list
-			- Do room ownership changes?
+			- Do room ownerships change?
 		- (Possibly) automatically authenticate again
 			- Re create file in client directory
 	- Get client to use local config file on start to log authenticated users in
 
-HANDSHAKE
-requires significant changes to initial connect
+HANDSHAKE (only if automatic authentication is implemented)
+requires changes to initial connect that may be difficult
 	- on connect server sends #hasauth to client
 	- client returns {username, hash} or NULL dependent on local file
 		- need to make sure that we can verify if local file exists
@@ -38,6 +35,8 @@ check I/O
 
 	in this case guest2 abruptly disconnected and the disconnection was detected during guest3's connection
 	need to ignore the guest2 moved from MainHall message
+
+	failed #delete doesn't return anything, doesn't print prompt
 
 double check #who	
 	should be good, especially since we demonstrate rather than pass a test suite

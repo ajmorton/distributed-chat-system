@@ -30,6 +30,12 @@ public class Delete extends Command{
 		ServerInfo sInfo  = c.getServerInfo();
 		String     userid = c.getName();
 		
+		String kickersName = c.getName();
+		if(!sInfo.inAuthIndex(kickersName)){
+			// user not authenticated, cannot delete rooms
+			return;
+		}
+		
 		Room delRoom = sInfo.getRoom(roomid);
 		if(delRoom == null){
 			//room not found
