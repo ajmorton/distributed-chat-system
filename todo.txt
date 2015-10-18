@@ -13,10 +13,15 @@ Authenticated Users:
 
 HANDSHAKE
 requires significant changes to initial connect
-		- on connect send #hasauth to client
-		- client returns {username, hash} or NULL dependant on local file
-			- need to make sure that we can verify if local file exists
-			- need to 
+	- on connect server sends #hasauth to client
+	- client returns {username, hash} or NULL dependent on local file
+		- need to make sure that we can verify if local file exists
+		- need to make sure there is a way to reject invalid 
+		  user/password for example if server restarts in between quit and reconnect
+	- depending on if authentication succeeds or not assign to guest num
+		- do we want to move user back to previous room
+			// no, rooms may be deleted
+				
 
 check I/O
 	no test suites so cosmetics only 
