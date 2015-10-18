@@ -1,24 +1,32 @@
 package server;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
+
+import common.PasswordHash;
 
 /**
  * Server Information class
  * contains information about all clients, 
  * all rooms and which guestNames are available
  */
-public class ServerInfo {
-	
-	private volatile Vector<Room>        roomList;			// list of rooms on the server
-	private volatile Vector<Connection>  clientList;		// list of clients on the server
-	private FreeGuestNumbers			 freeGuestNums;
+public class ServerInfo
+{
+	private volatile Vector<Room>        		roomList;		// list of rooms on the server
+	private volatile Vector<Connection>  		clientList;		// list of clients on the server
+	private FreeGuestNumbers			 		freeGuestNums;
+	private ConcurrentHashMap<String,String> 	authUsers;		// List of authenticated users
 	
 	// CONSTRUCTOR
-	public ServerInfo(){
+	public ServerInfo()
+	{
 		this.roomList       = new Vector<Room>();
 		this.clientList     = new Vector<Connection>();
-		this.freeGuestNums = new FreeGuestNumbers(this);
+		this.freeGuestNums 	= new FreeGuestNumbers(this);
+		this.authUsers 		= new ConcurrentHashMap<>();
 		roomList.add(new Room("MainHall", ""));
 	}
 	
@@ -148,6 +156,35 @@ public class ServerInfo {
 	 */
 	public void freeGuest(String name){
 		freeGuestNums.freeGuest(name);
+	}
+
+	public void addAuthUser(String name, String hash)
+	{
+		try {
+			authUsers.put(name, PasswordHash.createHash(hash));
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean tryExistingAuth(String name, String hash)
+	{
+		return inAuthIndex(name) && matchesPassword(name, hash);
+	}
+	
+	public boolean inAuthIndex(String name)
+	{
+		return authUsers.containsKey(name);
+	}
+	
+	private boolean matchesPassword(String name, String hash)
+	{
+		try {
+			return PasswordHash.validatePassword(hash, authUsers.get(name));
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

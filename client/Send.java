@@ -9,11 +9,16 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 import com.google.gson.Gson;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
+
 import commands.*;
+import common.CredentialHash;
 import common.PasswordHash;
 
 /**
@@ -168,17 +173,15 @@ public class Send extends Thread
 	}
 	
 	private static String doPassword(String identity)
-	{
-		// TODO Write a file with the user's name and password hash value...
-		
+	{		
 		String hash = null;
 		try {
-			// Get a new password from the user and hash it
+			// Get a new password from the user and simple hash it
 			// (without making a reference to the password in memory)
-			hash = PasswordHash.createHash(console.readPassword("Enter a new password: "));
+			hash = takePassword("Enter a new password: ");
 		
 			// Make sure the user knows the password
-			if(PasswordHash.validatePassword(console.readPassword("Confirm password: "), hash)) {
+			if(hash.equals(takePassword("Confirm password: "))) {
 				// Store the hash locally
 				// IMPLEMENTATION NOT YET STABLE
 				if(STORE_HASH) {
@@ -187,18 +190,32 @@ public class Send extends Thread
 					pw.println(gson.toJson(new CredentialHash(identity, hash)));
 					pw.close();
 				}
-				
 				return hash;
 			}
 			System.out.println("Passwords do not match");
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+		}
+		catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
+		}
+		catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	private static String takePassword(String message)
+	{
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		
+		char[] pass = console.readPassword(message);
+		byte[] passBytes = (new String(pass)).getBytes(StandardCharsets.UTF_8);
+		
+		return new String(Base64.encode(md.digest(passBytes)));
 	}
 }		
 

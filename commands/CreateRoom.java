@@ -64,24 +64,7 @@ public class CreateRoom extends Command{
 				return false;
 			}
 		}
-
-		// is the name the right length
-		Boolean rightLength = (newName.length() >= 3) && (newName.length() <= 32);
-		if(rightLength){
-			
-			// is the name alphanumeric (no special characters)
-			Boolean alphanumeric = newName.matches("[A-Za-z0-9]+");
-			if(alphanumeric){
-				
-				// does the name start with a letter
-				Boolean firstIsAlpha = newName.substring(0,1).matches("[A-Za-z]");
-				if(firstIsAlpha){
-					return true;
-				}
-			}
-		}
-		
-		return false;
+		return newName.matches("[A-Za-z][A-Za-z0-9]{2,32}");
 	}
 }
 

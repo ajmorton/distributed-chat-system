@@ -56,7 +56,9 @@ public class IdentityChange extends Command
 			// broadcast the name change to all clients
 			c.getServerInfo().broadcast(json);
 						
-		}else{
+		}
+		else
+		{
 			// name not updated
 			newID = new NewIdentity(oldName, oldName);
 			newID.sendJSON(c);
@@ -74,32 +76,31 @@ public class IdentityChange extends Command
 	 */
 	private Boolean validName(String newName, ServerInfo sInfo){
 		
-		// check that name is not already in use
-		Vector<Connection> allClients = sInfo.getAllClients();
-		for(int i = 0; i < allClients.size(); i++){
-			if(allClients.get(i).getName().equals(newName)){
-				return false;
-			}
-		}
-		
-		// is the name the right length
-		Boolean rightLength = (newName.length() >= 3) && (newName.length() <= 16);
-		if(rightLength){
-			
-			// is the name alphanumeric
-			Boolean alphanumeric = newName.matches("[A-Za-z0-9]+");
-			if(alphanumeric){
-				
-				// is the first character a letter
-				Boolean firstIsAlpha = newName.substring(0,1).matches("[A-Za-z]");
-				if(firstIsAlpha){
-					return true;
-				}
-			}
-		}
+		return validRegexName(newName) && !nameAlreadyExists(newName, sInfo);
+	}
+
+	protected boolean nameAlreadyExists(String name, ServerInfo sInfo)
+	{
+		return isAuthName(name, sInfo) || isConnectedName(name, sInfo);
+	}
 	
+	protected boolean isConnectedName(String name, ServerInfo sInfo)
+	{
+		for (Connection conn: sInfo.getAllClients()) {
+			if (conn.getName().equals(name)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
+	protected boolean isAuthName(String name, ServerInfo sInfo)
+	{
+		return sInfo.inAuthIndex(name);
+	}
 	
+	protected boolean validRegexName(String name)
+	{
+		return name.matches("[A-Za-z][A-Za-z0-9]{5,15}");
+	}
 }

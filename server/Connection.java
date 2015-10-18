@@ -15,12 +15,12 @@ public class Connection extends Thread
 	
 	private static final boolean DEBUG = false;
 	
-	private BufferedReader in;				// used to read messages from client
-	private PrintWriter    out;				// used to send messages to client
-	private Socket      clientSocket;	// the socket used to connect to client
-	private ServerInfo     sInfo;			// information about the server
-	private ClientInfo     cInfo;			// information about the client
-	private Boolean        terminateFlag; 	// flag that terminates the connection
+	private BufferedReader 	in;				// used to read messages from client
+	private PrintWriter    	out;			// used to send messages to client
+	private Socket      	clientSocket;	// the socket used to connect to client
+	private ServerInfo     	sInfo;			// information about the server
+	private ClientInfo     	cInfo;			// information about the client
+	private Boolean        	terminateFlag; 	// flag that terminates the connection
 
 	// CONSTRUCTOR
 	public Connection (Socket s, ServerInfo sInfo, ClientInfo cInfo) {

@@ -9,17 +9,18 @@ import java.util.Vector;
  */
 public class ClientInfo {
 	
-	String       currRoomName;	// clients current room name
-	Room         currRoom;		// clients current room object
-	Vector<Room> ownerOf;		// the list of rooms owned by the client
-	BanList      banList;		// the list of bans the client has
-	
+	String       	currRoomName;	// clients current room name
+	Room         	currRoom;		// clients current room object
+	Vector<Room> 	ownerOf;		// the list of rooms owned by the client
+	BanList      	banList;		// the list of bans the client has
+	boolean			isAuth;		// True if the user is authenticated	
 	
 	public ClientInfo(ServerInfo sInfo){
-		currRoomName = "";
-		currRoom     = sInfo.getRoom(currRoomName);
-		ownerOf      = new Vector<Room>();
-		banList      = new BanList();
+		currRoomName 	= "";
+		currRoom     	= sInfo.getRoom(currRoomName);
+		ownerOf      	= new Vector<Room>();
+		banList      	= new BanList();
+		isAuth			= false;
 	}
 	
 	
@@ -82,4 +83,13 @@ public class ClientInfo {
 		return banList.isBanned(roomid);
 	}
 	
+	public void makeAuth(String hash)
+	{
+		this.isAuth = true;
+	}
+	
+	public boolean isAuthenticated()
+	{
+		return this.isAuth;
+	}
 }
