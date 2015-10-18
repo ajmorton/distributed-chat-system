@@ -42,7 +42,13 @@ public class Quit extends Command{
 		RoomChange roomChange = new RoomChange(c.getName(), oldRoom, "");
 		String     json       = gson.toJson(roomChange);
 		
-		c.send(json);
+		boolean droppedConnection = c.getPrintWriter().checkError();
+		
+		// if the connection is open send a #roomchange to null to client (#quit message)
+		if(!droppedConnection){
+			c.send(json);			
+		}
+		
 		currRoom.broadcast(json);
 		
 		

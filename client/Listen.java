@@ -64,6 +64,8 @@ public class Listen extends Thread
 				// convert the JSON to its corresponding message object
 				if (DEBUG) {System.out.println("***RECEIVING***");}
 				String  json    = in.readLine();
+				// TODO printlln
+				System.out.println(json);
 				if (DEBUG) {
 					System.out.println("***RECEIVED***");
 					System.out.println(json);
@@ -104,7 +106,6 @@ public class Listen extends Thread
 	 */
 	private String sanitize(String input){
 		
-		System.out.println(input);
 		
 		int openBracket,
 			closeBracket;

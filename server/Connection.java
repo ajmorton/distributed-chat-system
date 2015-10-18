@@ -41,10 +41,10 @@ public class Connection extends Thread
 	}
 	
 	// GETTERS
-	public ClientInfo getClientInfo()	{return cInfo;}
-	public ServerInfo getServerInfo()	{return sInfo;}
-	public Socket 	  getSocket()	    {return clientSocket;}
-	
+	public ClientInfo  getClientInfo()	{return cInfo;}
+	public ServerInfo  getServerInfo()	{return sInfo;}
+	public Socket 	   getSocket()	    {return clientSocket;}
+	public PrintWriter getPrintWriter() {return out;};
 	
 	/**
 	 * calls sendMessage to send a JSON string message to the client

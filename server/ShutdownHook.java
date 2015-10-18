@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Vector;
 
+import com.google.gson.Gson;
+
 import commands.RoomChange;
 
 /** 
@@ -33,12 +35,20 @@ public class ShutdownHook extends Thread{
 			// close the server socket
 			sSocket.close();
 			
-			// send a quit message to all clients and close connection
+			Gson gson = new Gson();
+			
+			// sends a message to each client to quit them		
 			for(Connection c: allConns){
-				RoomChange rChange = new RoomChange(c.getName(), c.getClientInfo().getCurrRoomName(), "");
-				rChange.sendJSON(c);
+				
+				String     oldRoom    = c.getClientInfo().getCurrRoom().getName();
+				RoomChange roomChange = new RoomChange(c.getName(), oldRoom, "");
+				String     json       = gson.toJson(roomChange);
+
+				c.sendMessage(json);
 				c.terminate();
 			}
+			
+			
 		
 		} catch (IOException e) {
 			e.printStackTrace();

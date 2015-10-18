@@ -50,10 +50,12 @@ public class Send extends Thread
 		
 	}
 
+	// GETTERS
+	public boolean getQuitFlag() {return quitFlag;}
 	
 	// SETTERS
 	
-	public void quit()			{quitFlag = true;}
+	public void quit() {quitFlag = true;}
 	
 	
 	
@@ -102,6 +104,8 @@ public class Send extends Thread
 						System.out.println("***SENDING***");
 						System.out.println(json);
 						}
+					// TODO print
+					System.out.println(json);
 					out.println(json);
 					if (DEBUG) {System.out.println("***SENT***");}
 	
@@ -154,12 +158,19 @@ public class Send extends Thread
 			return new Quit();
 		case "#authenticate":
 			// If user doesn't specify a new identity, they keep the old one
-			/*
+			/* TODO can remove?
 			if (argArray.length == 0) {
 				return new Authenticate(doPassword(c.getClientName()));
 			}*/
 			// Otherwise, change their name and authenticate them
-			return new Authenticate(doPassword(c.getClientName()), restOfInput);
+			
+			String password = doPassword(c.getClientName());
+			if(password == null){
+				return new Message(firstWord + " " + restOfInput);
+			} 
+			
+			return new Authenticate(password, restOfInput);
+			
 		default:
 			// if the first word doesn't match any of the above switch cases it is a message
 			return new Message(firstWord + " " + restOfInput);		
@@ -187,6 +198,7 @@ public class Send extends Thread
 			return hash;
 		}
 			System.out.println("Passwords do not match");
+			// TODO currently mismatched passwords sends null as the password
 		return null;
 	}
 	
