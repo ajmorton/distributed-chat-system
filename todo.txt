@@ -9,6 +9,13 @@ Authenticated Users:
 			- Re create file in client directory
 	- Get client to use local config file on start to log authenticated users in
 
+HANDSHAKE
+requires significant changes to initial connect
+		- on connect send #hasauth to client
+		- client returns {username, hash} or NULL dependant on local file
+			- need to make sure that we can verify if local file exists
+			- need to 
+
 check I/O
 	no test suites so cosmetics only 
 	
@@ -27,4 +34,7 @@ check I/O
 
 double check #who	
 	should be good, especially since we demonstrate rather than pass a test suite
+	
+Full functionality test
+	run through all command to verify
 	
