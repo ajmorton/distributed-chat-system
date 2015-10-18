@@ -14,7 +14,7 @@ check I/O
 			[MainHall] guest3> 
 
 	in this case guest2 abruptly disconnected and the disconnection was detected during guest3's connection
-	need to ignore the guest2 moved from Mainhall message
+	need to ignore the guest2 moved from MainHall message
 
 double check #who	
 	should be good, especially since we demonstrate rather than pass a test suite
