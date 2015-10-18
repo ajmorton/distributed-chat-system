@@ -54,7 +54,7 @@ public class IdentityChange extends Command
 			sInfo.freeGuest(oldName);
 			
 			// broadcast the name change to all clients
-			c.getServerInfo().broadcast(json);
+			sInfo.broadcast(json);
 						
 		}
 		else {
