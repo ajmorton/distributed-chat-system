@@ -21,23 +21,24 @@ public class AuthResponse extends Command
 	public void execute(ChatClient c)
 	{
 		if (!authSuccess) {
-			System.out.println("Authentication Failure: " + message);
-			return;
+			System.out.println("\nAuthentication Failure: " + message);
+		}
+		else if(message.isEmpty()) {
+			System.out.println("\nAuthentication Success");
+		} 
+		else {
+			System.out.println("\nNew Authentication Success");
+			
+			try {
+				PrintWriter pw = new PrintWriter("./chat.config", "UTF-8");
+				pw.println(message);
+				pw.flush();
+				pw.close();
+			} catch (FileNotFoundException | UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		if(message.isEmpty()) {
-			System.out.println("Authentication Success");
-			return;
-		}
-		
-		System.out.println("New Authentication Success");
-		try {
-			PrintWriter pw = new PrintWriter("./chat.config", "UTF-8");
-			pw.println(message);
-			pw.flush();
-			pw.close();
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		c.printPrompt();
 	}
 }

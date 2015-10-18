@@ -42,6 +42,7 @@ public class Quit extends Command{
 		RoomChange roomChange = new RoomChange(c.getName(), oldRoom, "");
 		String     json       = gson.toJson(roomChange);
 		
+		c.send(json);
 		currRoom.broadcast(json);
 		
 		

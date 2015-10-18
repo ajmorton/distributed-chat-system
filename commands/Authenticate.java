@@ -65,6 +65,11 @@ public class Authenticate extends IdentityChange
 			(new AuthResponse("Invalid username.", false)).sendJSON(c);;
 			return;
 		}
+		
+		if (isGuestName(identity)) {
+			(new AuthResponse("You may not authenticate as a guest.\nPick another name.", false)).sendJSON(c);
+			return;
+		}
 
 		// If the name is recorded in the authentication index,
 		// test the hash and log the user in if it matches
@@ -100,5 +105,10 @@ public class Authenticate extends IdentityChange
 		(new AuthResponse(identity, true)).sendJSON(c);
 
 		return;
+	}
+	
+	private boolean isGuestName(String name)
+	{
+		return name.matches("guest\\d+");
 	}
 }
