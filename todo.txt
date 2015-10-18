@@ -1,0 +1,11 @@
+
+
+Remove Ping
+	
+
+check I/O
+	no test suites so cosmetics only 
+
+double check #who	
+	should be good, especially since we demonstrate rather than pass a test suite
+	

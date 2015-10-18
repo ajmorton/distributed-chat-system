@@ -17,7 +17,7 @@ public class Connection extends Thread
 	
 	private BufferedReader in;				// used to read messages from client
 	private PrintWriter    out;				// used to send messages to client
-	private Socket      clientSocket;	// the socket used to connect to client
+	private Socket         clientSocket;	// the socket used to connect to client
 	private ServerInfo     sInfo;			// information about the server
 	private ClientInfo     cInfo;			// information about the client
 	private Boolean        terminateFlag; 	// flag that terminates the connection
@@ -43,7 +43,7 @@ public class Connection extends Thread
 	// GETTERS
 	public ClientInfo getClientInfo()	{return cInfo;}
 	public ServerInfo getServerInfo()	{return sInfo;}
-	public Socket 	  getSocket()	{return clientSocket;}
+	public Socket 	  getSocket()	    {return clientSocket;}
 	
 	
 	/**
@@ -77,7 +77,6 @@ public class Connection extends Thread
 			String json;
 			while(!terminateFlag){
 				// non-blocking read available
-
 				if (DEBUG) {System.out.println("***RECEIVING***");}
 				json = in.readLine();
 				if (DEBUG) {
@@ -103,7 +102,10 @@ public class Connection extends Thread
 			System.out.println("EOF:"+e.getMessage());
 		} catch(IOException e) {
 			System.out.println("readline:"+e.getMessage());
-		} finally {
+		} catch (NullPointerException e){
+			// TODO only occurs at Connection termination
+			// due to readline() blocking, ready() not available for SSL
+		}finally {
 			try {
 				clientSocket.close();
 			}catch (IOException e){
