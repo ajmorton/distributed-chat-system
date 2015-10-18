@@ -2,7 +2,6 @@ package client;
 
 import java.io.BufferedReader;
 import java.io.Console;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -12,14 +11,11 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 import com.google.gson.Gson;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import commands.*;
-import common.CredentialHash;
-import common.PasswordHash;
 
 /**
  * The Send thread deals with reading in commands from stdin 
@@ -32,9 +28,6 @@ public class Send extends Thread
 	// TODO max buffer size 1000
 	
 	private static final boolean DEBUG = false;
-	
-	// Set to true to store password hash in local file
-	private static final boolean STORE_HASH = false;
 	
 	// Console reference to read passwords quietly
 	private static final Console console = System.console();
@@ -175,32 +168,25 @@ public class Send extends Thread
 	
 	private static String doPassword(String identity)
 	{		
-		String hash = null;
-		try {
-			// Get a new password from the user and simple hash it
-			// (without making a reference to the password in memory)
-			hash = takePassword("Enter a new password: ");
-		
-			// Make sure the user knows the password
-			if(hash.equals(takePassword("Confirm password: "))) {
-				// Store the hash locally
-				// IMPLEMENTATION NOT YET STABLE
+		// Get a new password from the user and simple hash it
+		// (without making a reference to the password in memory)
+		String hash = takePassword("Enter a new password: ");
+
+		// Make sure the user knows the password
+		if(hash.equals(takePassword("Confirm password: "))) {
+
+			/*
 				if(STORE_HASH) {
 					Gson gson = new Gson();
 					PrintWriter pw = new PrintWriter("./chat.hash", "UTF-8");
 					pw.println(gson.toJson(new CredentialHash(identity, hash)));
 					pw.close();
 				}
-				return hash;
-			}
+			*/
+			
+			return hash;
+		}
 			System.out.println("Passwords do not match");
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		return null;
 	}
 	

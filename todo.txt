@@ -1,4 +1,13 @@
-
+Authenticated Users:
+	- Privileges for authenticated users only wrt. rooms
+		- Delete room
+		- Kick user
+	- Changing identity from authenticated user
+		- Remove previous identity from list
+			- Do room ownership changes?
+		- (Possibly) automatically authenticate again
+			- Re create file in client directory
+	- Get client to use local config file on start to log authenticated users in
 
 check I/O
 	no test suites so cosmetics only 

@@ -8,6 +8,8 @@ import java.net.Socket;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
+import commands.AuthResponse;
 import commands.Command;
 import commands.NewIdentity;
 import commands.RoomChange;
@@ -102,6 +104,8 @@ public class Listen extends Thread
 	 */
 	private String sanitize(String input){
 		
+		System.out.println(input);
+		
 		int openBracket,
 			closeBracket;
 		
@@ -160,6 +164,8 @@ public class Listen extends Thread
 			return gson.fromJson(json, RoomContents.class);
 		case "roomlist":			
 			return gson.fromJson(json, RoomList.class);
+		case "authresponse":
+			return gson.fromJson(json, AuthResponse.class);
 		}
 		
 		//invalid JSON received

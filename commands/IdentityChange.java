@@ -1,7 +1,6 @@
 package commands;
 
 import java.io.IOException;
-import java.util.Vector;
 
 import com.google.gson.Gson;
 
@@ -41,7 +40,7 @@ public class IdentityChange extends Command
 		Gson gson = new Gson();
 		String json;
 
-		if(validName(newName, c.getServerInfo())){
+		if (validName(newName, c.getServerInfo())) {
 			
 			newID = new NewIdentity(newName, oldName);
 			json  = gson.toJson(newID);
@@ -54,11 +53,10 @@ public class IdentityChange extends Command
 			sInfo.freeGuest(oldName);
 			
 			// broadcast the name change to all clients
-			c.getServerInfo().broadcast(json);
+			sInfo.broadcast(json);
 						
 		}
-		else
-		{
+		else {
 			// name not updated
 			newID = new NewIdentity(oldName, oldName);
 			newID.sendJSON(c);

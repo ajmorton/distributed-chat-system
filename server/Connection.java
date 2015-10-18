@@ -170,6 +170,8 @@ public class Connection extends Thread
 			return gson.fromJson(json, Message.class);
 		case "quit":			
 			return gson.fromJson(json, Quit.class);
+		case "authenticate":
+			return gson.fromJson(json, Authenticate.class);
 		}
 		
 		//invalid JSON received

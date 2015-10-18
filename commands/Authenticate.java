@@ -2,8 +2,6 @@ package commands;
 
 import java.io.IOException;
 
-import com.google.gson.Gson;
-
 import server.ClientInfo;
 import server.Connection;
 import server.ServerInfo;
@@ -27,6 +25,7 @@ public class Authenticate extends IdentityChange
 	/**
 	 * One argument constructor method for when user keeps current identity
 	 */
+	/*
 	public Authenticate(String hash)
 	{
 		super("");
@@ -34,6 +33,7 @@ public class Authenticate extends IdentityChange
 		this.hash = hash;
 		this.identity = "";
 	}
+	*/
 	
 	/**
 	 * Two argument constructor method for when new name is specified
@@ -62,7 +62,12 @@ public class Authenticate extends IdentityChange
 		// Fail if new name doesn't match rules or if another user is logged in already
 		if (!validRegexName(identity) || isConnectedName(identity, sInfo))
 		{
-			// TODO fail here
+			(new AuthResponse("Invalid username.", false)).sendJSON(c);;
+			return;
+		}
+		
+		if (isGuestName(identity)) {
+			(new AuthResponse("You may not authenticate as a guest.\nPick another name.", false)).sendJSON(c);
 			return;
 		}
 
@@ -70,11 +75,11 @@ public class Authenticate extends IdentityChange
 		// test the hash and log the user in if it matches
 		if (isAuthName(identity, sInfo)) {
 			if (!sInfo.tryExistingAuth(identity, hash)) {
-				// TODO fail here
+				(new AuthResponse("Incorrect username or password.", false)).sendJSON(c);;
 				return;
 			}
 			else {
-				// TODO succeed here
+				(new AuthResponse("", true)).sendJSON(c);;
 				super.execute(c);
 				return;
 			}
@@ -95,6 +100,15 @@ public class Authenticate extends IdentityChange
 		sInfo.addAuthUser(identity, hash);
 		// Mark the user's auth flag as true
 		cInfo.makeAuth(hash);
+		
+		// Tell the client the new identity is authenticated
+		(new AuthResponse(identity, true)).sendJSON(c);
+
 		return;
+	}
+	
+	private boolean isGuestName(String name)
+	{
+		return name.matches("guest\\d+");
 	}
 }

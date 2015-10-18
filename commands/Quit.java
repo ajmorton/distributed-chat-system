@@ -42,6 +42,7 @@ public class Quit extends Command{
 		RoomChange roomChange = new RoomChange(c.getName(), oldRoom, "");
 		String     json       = gson.toJson(roomChange);
 		
+		c.send(json);
 		currRoom.broadcast(json);
 		
 		
@@ -49,25 +50,27 @@ public class Quit extends Command{
 		Room         room  = c.getClientInfo().getCurrRoom();
 		Vector<Room> rList = c.getServerInfo().getRoomList();
 		
-		Boolean noOwner =  room.getRoomOwner().equals(""),
-				notMain = !room.getName().equals(rList.get(0).getName()),
-				empty   =  room.getSize() == 0;
+		boolean noOwner 		= room.getRoomOwner().isEmpty();
+		boolean AndNotMain 		= noOwner && !room.getName().equals(rList.get(0).getName());
+		boolean canBeDeleted 	= AndNotMain && room.getSize() == 0;
 
-		if(noOwner && notMain && empty){
+		if(canBeDeleted){
 			rList.remove(room);
 		}
 
 		// set owned rooms to owner null and if possible delete them
-		Vector<Room> ownedRooms = c.getClientInfo().getOwnedRooms();
-		for(Room owned: ownedRooms){
-			owned.setRoomOwner("");
-			
-			noOwner =  owned.getRoomOwner().equals("");
-			notMain = !owned.getName().equals("MainHall");
-			empty   =  owned.getSize() == 0;
+		if (!c.getClientInfo().isAuthenticated()) {
+			Vector<Room> ownedRooms = c.getClientInfo().getOwnedRooms();
+			for(Room owned: ownedRooms){
+				owned.setRoomOwner("");
 
-			if(noOwner && notMain && empty){
-				rList.remove(owned);
+				noOwner 		= owned.getRoomOwner().equals("");
+				AndNotMain 		= noOwner && !owned.getName().equals("MainHall");
+				canBeDeleted   	= canBeDeleted && owned.getSize() == 0;
+
+				if(canBeDeleted){
+					rList.remove(owned);
+				}
 			}
 		}
 		
