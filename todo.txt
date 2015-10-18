@@ -1,4 +1,6 @@
 Authenticated Users:
+	- Password
+		- Make second login not ask for confirm password
 	- Privileges for authenticated users only wrt. rooms
 		- Delete room
 		- Kick user
