@@ -175,32 +175,25 @@ public class Send extends Thread
 	
 	private static String doPassword(String identity)
 	{		
-		String hash = null;
-		try {
-			// Get a new password from the user and simple hash it
-			// (without making a reference to the password in memory)
-			hash = takePassword("Enter a new password: ");
-		
-			// Make sure the user knows the password
-			if(hash.equals(takePassword("Confirm password: "))) {
-				// Store the hash locally
-				// IMPLEMENTATION NOT YET STABLE
+		// Get a new password from the user and simple hash it
+		// (without making a reference to the password in memory)
+		String hash = takePassword("Enter a new password: ");
+
+		// Make sure the user knows the password
+		if(hash.equals(takePassword("Confirm password: "))) {
+
+			/*
 				if(STORE_HASH) {
 					Gson gson = new Gson();
 					PrintWriter pw = new PrintWriter("./chat.hash", "UTF-8");
 					pw.println(gson.toJson(new CredentialHash(identity, hash)));
 					pw.close();
 				}
-				return hash;
-			}
+			*/
+			
+			return hash;
+		}
 			System.out.println("Passwords do not match");
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		return null;
 	}
 	
