@@ -29,6 +29,11 @@ public class Quit extends Command{
 	public void execute(Connection c) throws IOException{
 		ServerInfo sInfo = c.getServerInfo();
 		
+		// remove client from room and allClients
+		sInfo.getAllClients().remove(c);
+		c.getClientInfo().getCurrRoom().remove(c);
+				
+		
 		// inform all in room of departure
 		Room   currRoom = c.getClientInfo().getCurrRoom();
 		String oldRoom  = currRoom.getName();
@@ -38,10 +43,6 @@ public class Quit extends Command{
 		String     json       = gson.toJson(roomChange);
 		
 		currRoom.broadcast(json);
-		
-		// remove client from room and allClients
-		sInfo.getAllClients().remove(c);
-		c.getClientInfo().getCurrRoom().remove(c);
 		
 		
 		// if leaving the room allows for its deletion

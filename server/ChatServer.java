@@ -83,11 +83,8 @@ public class ChatServer {
 			// create server info 
 			ServerInfo sInfo = new ServerInfo();
 			
-			// create server cleaning thread
-			ServerCleanUp sCleanUp = new ServerCleanUp(sInfo);
-			
 			// attach shutdown hook
-			Runtime.getRuntime().addShutdownHook(new ShutdownHook(sInfo, sCleanUp, listenSocket));			
+			Runtime.getRuntime().addShutdownHook(new ShutdownHook(sInfo, listenSocket));			
 			
 			
 			
@@ -105,8 +102,6 @@ public class ChatServer {
 					// set the new clients id and inform client
 					NewIdentity newID = new NewIdentity(newClientName, c.getName());
 					c.setName(newClientName);
-
-					System.out.println("new connection");
 
 					newID.sendJSON(c);
 

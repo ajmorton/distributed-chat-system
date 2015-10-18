@@ -1,10 +1,20 @@
 
 
-Remove Ping
-	
-
 check I/O
 	no test suites so cosmetics only 
+	
+	if a client abruptly disconnects and this is only discovered while a new 
+	client connects there is messiness on the connecting clients UI:
+	
+			guest3 moved from  to MainHall
+		
+			guest2 moved from MainHall to 
+			[MainHall] guest3> MainHall contains guest1 guest3
+			MainHall: 2
+			[MainHall] guest3> 
+
+	in this case guest2 abruptly disconnected and the disconnection was detected during guest3's connection
+	need to ignore the guest2 moved from Mainhall message
 
 double check #who	
 	should be good, especially since we demonstrate rather than pass a test suite
