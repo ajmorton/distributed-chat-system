@@ -35,8 +35,8 @@ public class ChatClient {
 	private SSLSocket 	socket;				// socket the client uses to connect to the server
 	private Send 		send;				// thread to send from stdin to the server
 	private Listen 		listen;				// thread that listen for server messages
-	private Boolean 	quitFlag;			// flag that terminates the client
-	
+	private boolean 	quitFlag;			// flag that terminates the client
+	private boolean		isAuth;				// whether the client is authenticated on the server
 	
 	// CONSTRUCTOR
 	/**
@@ -57,6 +57,7 @@ public class ChatClient {
 		this.makeRoomRequest = "";
 		
 		this.quitFlag 		 = false;
+		this.isAuth			 = false;
 		
 		SocketFactory factory = null;
 		
@@ -102,14 +103,17 @@ public class ChatClient {
 	public Listen  		getListen()				{return listen;}
 	public Boolean 		getQuitFlag()			{return quitFlag;}
 	public String  		getMakeRoomRequest() 	{return makeRoomRequest;}
+	public boolean		getIsAuth()				{return isAuth;}
 	
 	// SETTERS
 	public void setRoom(String newRoom)			{roomName = newRoom;}
 	public void setClientName(String newName)	{clientName = newName;}
 	public void setRoomRequest(String roomName) {makeRoomRequest = roomName;}
-
+	public void setAuth()						{isAuth = true;}
 
 	// METHODS
+	
+	
 	
 	/**
 	 * prints a prompt with the format [roomName] clientName>

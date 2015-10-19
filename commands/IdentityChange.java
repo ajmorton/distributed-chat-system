@@ -1,6 +1,10 @@
 package commands;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import common.PasswordHash;
 
 import com.google.gson.Gson;
 
@@ -42,9 +46,47 @@ public class IdentityChange extends Command
 
 		if (validName(newName, c.getServerInfo())) {
 			
+			// if user is authenticated then password is needed
+			// uses different process as connection doens't allow nested commands
+			// (send password request inside of changeidentity etc)
+			if(c.getClientInfo().isAuthenticated()){
+				
+				// send password request
+				json = gson.toJson(new PasswordRequest());
+				c.send(json);
+				
+				// retrieve password response
+				// TODO race condition: a non-password response is sent first.
+				// have to assume that the server-client communication is faster than any Command line input
+				json = c.getBufferedReader().readLine();
+				Password password = gson.fromJson(json, Password.class);
+				String hash = password.getHash();
+				
+				
+				try {
+					
+					String saltedHash = PasswordHash.createHash(hash);
+					if(!sInfo.changeAuthenticatedName(oldName, newName, hash, saltedHash)){
+						newID = new NewIdentity(oldName, oldName);
+						newID.sendJSON(c);
+						return;
+					}
+					
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				} catch (InvalidKeySpecException e) {
+					e.printStackTrace();
+				}
+						
+
+			} 
+			
 			newID = new NewIdentity(newName, oldName);
 			json  = gson.toJson(newID);
+			
+			// update authenticated user in general list
 			c.setName(newName);
+			
 			
 			// update owner of rooms owned by client
 			c.getClientInfo().updateOwnedRoom(newName);

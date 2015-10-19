@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import commands.AuthResponse;
 import commands.Command;
 import commands.NewIdentity;
+import commands.PasswordRequest;
 import commands.RoomChange;
 import commands.RoomContents;
 import commands.RoomList;
@@ -64,8 +65,6 @@ public class Listen extends Thread
 				// convert the JSON to its corresponding message object
 				if (DEBUG) {System.out.println("***RECEIVING***");}
 				String  json    = in.readLine();
-				// TODO printlln
-				System.out.println(json);
 				if (DEBUG) {
 					System.out.println("***RECEIVED***");
 					System.out.println(json);
@@ -143,13 +142,13 @@ public class Listen extends Thread
 	
 	
 	/**
-	 * Takes a JSON string and converts to its correspoding command object.
+	 * Takes a JSON string and converts to its corresponding command object.
 	 * The type of object is determined by the "type" key
 	 * @param json the string to convert
 	 * @return a command object
 	 */
 	private Command getCommand(String json){
-		
+				
 		Gson gson       = new Gson();
 		JsonObject jObj = gson.fromJson(json, JsonObject.class);
 		String type     = jObj.get("type").getAsString(); 
@@ -167,10 +166,11 @@ public class Listen extends Thread
 			return gson.fromJson(json, RoomList.class);
 		case "authresponse":
 			return gson.fromJson(json, AuthResponse.class);
+		case "passwordrequest":
+			return gson.fromJson(json, PasswordRequest.class);
+		default:
+			return null;
 		}
-		
-		//invalid JSON received
-		return null;
 	}
 	
 }

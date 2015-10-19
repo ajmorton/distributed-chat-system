@@ -1,11 +1,9 @@
 Authenticated Users:
 	- Password
 		- Make second login not ask for confirm password
-	- Changing identity from authenticated user
-		- Remove previous identity from list
-			- Do room ownerships change?
-		- (Possibly) automatically authenticate again
-			- Re create file in client directory
+
+	- (Possibly) automatically authenticate again
+		- Re create file in client directory
 	- Get client to use local config file on start to log authenticated users in
 
 HANDSHAKE (only if automatic authentication is implemented)
@@ -37,10 +35,17 @@ check I/O
 	need to ignore the guest2 moved from MainHall message
 
 	failed #delete doesn't return anything, doesn't print prompt
+	failed #kick doesn't return anything, doens't print prompt
+	invalid #join doesn't print prompt
+	
+does takePassword work on non-osx?
+
+certificate expiry
 
 double check #who	
 	should be good, especially since we demonstrate rather than pass a test suite
 	
 Full functionality test
 	run through all command to verify
+	
 	

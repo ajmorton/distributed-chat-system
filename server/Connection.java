@@ -41,10 +41,11 @@ public class Connection extends Thread
 	}
 	
 	// GETTERS
-	public ClientInfo  getClientInfo()	{return cInfo;}
-	public ServerInfo  getServerInfo()	{return sInfo;}
-	public Socket 	   getSocket()	    {return clientSocket;}
-	public PrintWriter getPrintWriter() {return out;};
+	public ClientInfo  getClientInfo()			{return cInfo;}
+	public ServerInfo  getServerInfo()			{return sInfo;}
+	public Socket 	   getSocket()	    		{return clientSocket;}
+	public PrintWriter getPrintWriter() 		{return out;};
+	public BufferedReader getBufferedReader() 	{return in;}
 	
 	/**
 	 * calls sendMessage to send a JSON string message to the client
@@ -98,7 +99,6 @@ public class Connection extends Thread
 			
 			String json;
 			while(!terminateFlag){
-				// non-blocking read available
 				if (DEBUG) {System.out.println("***RECEIVING***");}
 				json = in.readLine();
 				if (DEBUG) {
@@ -172,9 +172,12 @@ public class Connection extends Thread
 			return gson.fromJson(json, Quit.class);
 		case "authenticate":
 			return gson.fromJson(json, Authenticate.class);
+		case "verify":
+			return gson.fromJson(json, VerifyPassword.class);
 		}
 		
 		//invalid JSON received
 		return null;
 	}
+	
 }

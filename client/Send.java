@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import commands.*;
@@ -53,9 +54,9 @@ public class Send extends Thread
 
 	// GETTERS
 	public boolean getQuitFlag() {return quitFlag;}
+	public PrintWriter getOut()  {return out;}
 	
 	// SETTERS
-	
 	public void quit() {quitFlag = true;}
 	
 	
@@ -99,14 +100,17 @@ public class Send extends Thread
 					Command commandObj = getCommandObj(c, firstWord, restOfInput);
 
 					// convert the command object to a JSON string using gson
-					Gson gson   = new Gson();
+					
+					Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+//					Gson gson   = new Gson();
 					String json = gson.toJson(commandObj);
+					
+					
+					
 					if (DEBUG) {
 						System.out.println("***SENDING***");
 						System.out.println(json);
 						}
-					// TODO print
-					System.out.println(json);
 					out.println(json);
 					if (DEBUG) {System.out.println("***SENT***");}
 	
@@ -157,9 +161,14 @@ public class Send extends Thread
 			return new Delete(restOfInput);			
 		case "#quit":
 			return new Quit();
+		case "#verify":
+			String Vpassword = VPassword();
+			String name = c.getClientName();
+			return new VerifyPassword(name, Vpassword);
 		case "#authenticate":
 			// Otherwise, change their name and authenticate them
 			String password = doPassword(c.getClientName());
+			// if passwords don't match then send as message not #authenticate
 			if(password == null) {return new Message(firstWord + " " + restOfInput);} 
 			return new Authenticate(password, restOfInput);
 		default:
@@ -189,6 +198,15 @@ public class Send extends Thread
 		}
 			System.out.println("Passwords do not match");
 		return null;
+	}
+	
+
+	public String enterPassword(){
+		return takePassword("Enter Password: ");
+	}
+	
+	public static String VPassword(){
+		return takePassword("Enter Password: ");
 	}
 	
 	private static String takePassword(String message)

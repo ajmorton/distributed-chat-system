@@ -29,6 +29,8 @@ public class AuthResponse extends Command
 		else {
 			System.out.println("\nNew Authentication Success");
 			
+			c.setAuth();
+			
 			try {
 				PrintWriter pw = new PrintWriter("./chat.config", "UTF-8");
 				pw.println(message);

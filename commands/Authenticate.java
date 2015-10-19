@@ -7,7 +7,7 @@ import server.Connection;
 import server.ServerInfo;
 
 /**
- * Authenticate changes a user to an authenticated user, optionally (TODO guest exclusion) 
+ * Authenticate changes a user to an authenticated user, optionally
  * changing their username.
  * 
  * It takes a password to be (hashed and) kept for reference by the server.
@@ -55,9 +55,6 @@ public class Authenticate extends IdentityChange
 	{
 		ClientInfo cInfo = c.getClientInfo();
 		ServerInfo sInfo = c.getServerInfo();
-		
-		// Client has specified a new identity
-		//if(!identity.isEmpty()) {
 		
 		// Fail if new name doesn't match rules or if another user is logged in already
 		if (!validRegexName(identity) || isConnectedName(identity, sInfo))
