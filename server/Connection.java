@@ -13,7 +13,7 @@ import java.net.Socket;
 public class Connection extends Thread
 {
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	private BufferedReader 	in;				// used to read messages from client
 	private PrintWriter    	out;			// used to send messages to client
