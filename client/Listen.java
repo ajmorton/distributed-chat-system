@@ -24,7 +24,7 @@ import commands.ServerMessage;
 public class Listen extends Thread
 {
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	BufferedReader 	in;			// reads in messages from the server
 	ChatClient 		c;			// the client that the thread is in

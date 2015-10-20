@@ -2,6 +2,8 @@ package commands;
 
 import java.io.IOException;
 
+import com.google.gson.Gson;
+
 import server.ClientInfo;
 import server.Connection;
 import server.ServerInfo;
@@ -81,9 +83,7 @@ public class Authenticate extends IdentityChange
 			(new AuthResponse("You may not authenticate as a guest.\nPick another name.", false)).sendJSON(c);
 			return;
 		}
-		
-		// Otherwise the name doesn't exist,
-				
+						
 		// Add the user to the authentication index
 		sInfo.addAuthUser(identity, hash);
 		// Mark the user's auth flag as true
@@ -98,5 +98,27 @@ public class Authenticate extends IdentityChange
 		}
 
 		return;
+	}
+	
+	@Override
+	protected void changeID(Connection c, ServerInfo sInfo, String oldName, String newName) throws IOException
+	{	
+		// Get the client info
+		ClientInfo cInfo = c.getClientInfo();
+		
+		// Change the client's name
+		c.setName(newName);
+		
+		// Update all rooms owned by the client
+		cInfo.updateOwnedRoom(newName);
+		
+		// Free the name if it was guest\\d+
+		sInfo.freeGuest(oldName);
+		
+		// Create a NewID message and send it to the room
+		Gson gson = new Gson();
+		NewIdentity newID = new NewIdentity(newName, oldName);
+		String json = gson.toJson(newID);
+		cInfo.getCurrRoom().broadcast(json);
 	}
 }

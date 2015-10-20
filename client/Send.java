@@ -26,7 +26,7 @@ import commands.*;
 public class Send extends Thread
 {
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 //	private static final boolean STORE_HASH = true;
 	
 	// Console reference to read passwords quietly
