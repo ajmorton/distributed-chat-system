@@ -25,8 +25,6 @@ import commands.*;
  */
 public class Send extends Thread
 {
-
-	// TODO max buffer size 1000
 	
 	private static final boolean DEBUG = true;
 //	private static final boolean STORE_HASH = true;
@@ -53,8 +51,9 @@ public class Send extends Thread
 	}
 
 	// GETTERS
-	public boolean getQuitFlag() {return quitFlag;}
-	public PrintWriter getOut()  {return out;}
+	public boolean getQuitFlag() 	{return quitFlag;}
+	public PrintWriter getOut()  	{return out;}
+	public BufferedReader getIn() 	{return in;}
 	
 	// SETTERS
 	public void quit() {quitFlag = true;}
@@ -116,6 +115,7 @@ public class Send extends Thread
 						System.out.println(json);
 						}
 					out.println(json);
+					
 					if (DEBUG) {System.out.println("***SENT***");}
 	
 				} else {

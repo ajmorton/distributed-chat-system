@@ -45,7 +45,7 @@ public class RoomContents extends Command{
 	 */
 	public void execute(ChatClient c){
 		
-		System.out.print(roomid + " contains");
+		System.out.print("\r" + roomid + " contains");
 		
 		for(String client: identities){	
 			System.out.print(" " + client);

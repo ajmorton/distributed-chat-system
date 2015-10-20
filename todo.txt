@@ -1,7 +1,7 @@
 Authenticated Users:
 	- Password
 		- Make second login not ask for confirm password
-
+			- added a enterPassword() method for single password entry
 	- (Possibly) automatically authenticate again
 		- Re create file in client directory
 	- Get client to use local config file on start to log authenticated users in

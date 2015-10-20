@@ -101,6 +101,7 @@ public class ChatClient {
 	public Listen  		getListen()				{return listen;}
 	public Boolean 		getQuitFlag()			{return quitFlag;}
 	public String  		getMakeRoomRequest() 	{return makeRoomRequest;}
+	public String 		getCurrentRoom()		{return roomName;}
 	
 	// SETTERS
 	public void setRoom(String newRoom)			{roomName = newRoom;}
@@ -115,7 +116,7 @@ public class ChatClient {
 	 * prints a prompt with the format [roomName] clientName>
 	 */
 	public void printPrompt(){
-		System.out.print("[" + roomName + "] " + clientName + "> ");
+		System.out.print("  [" + roomName + "] " + clientName + "> ");
 	}
 	
 	/**
