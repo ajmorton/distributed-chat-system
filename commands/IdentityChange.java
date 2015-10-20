@@ -1,13 +1,10 @@
 package commands;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
-import common.PasswordHash;
 
 import com.google.gson.Gson;
 
+import server.ClientInfo;
 import server.Connection;
 import server.ServerInfo;
 
@@ -39,72 +36,40 @@ public class IdentityChange extends Command
 		String newName   = identity;
 		
 		ServerInfo sInfo = c.getServerInfo();
-		
-		NewIdentity newID; 			//the newIdentity message
-		Gson gson = new Gson();
-		String json;
 
-		if (validName(newName, c.getServerInfo())) {
-			
-			// if user is authenticated then password is needed
-			// uses different process as connection doens't allow nested commands
-			// (send password request inside of changeidentity etc)
-			if(c.getClientInfo().isAuthenticated()){
-				
-				// send password request
-				json = gson.toJson(new PasswordRequest());
-				c.send(json);
-				
-				// retrieve password response
-				// TODO race condition: a non-password response is sent first.
-				// have to assume that the server-client communication is faster than any Command line input
-				json = c.getBufferedReader().readLine();
-				Password password = gson.fromJson(json, Password.class);
-				String hash = password.getHash();
-				
-				
-				try {
-					
-					String saltedHash = PasswordHash.createHash(hash);
-					if(!sInfo.changeAuthenticatedName(oldName, newName, hash, saltedHash)){
-						newID = new NewIdentity(oldName, oldName);
-						newID.sendJSON(c);
-						return;
-					}
-					
-				} catch (NoSuchAlgorithmException e) {
-					e.printStackTrace();
-				} catch (InvalidKeySpecException e) {
-					e.printStackTrace();
-				}
-						
-
-			} 
-			
-			newID = new NewIdentity(newName, oldName);
-			json  = gson.toJson(newID);
-			
-			// update authenticated user in general list
-			c.setName(newName);
-			
-			
-			// update owner of rooms owned by client
-			c.getClientInfo().updateOwnedRoom(newName);
-			
-			// free up previous guestName if it was in use
-			sInfo.freeGuest(oldName);
-			
-			// broadcast the name change to all clients
-			sInfo.broadcast(json);
-						
+		if (!validName(newName, sInfo))
+		{
+			newName = oldName;
 		}
-		else {
-			// name not updated
-			newID = new NewIdentity(oldName, oldName);
-			newID.sendJSON(c);
-		}
+		changeID(c, sInfo, oldName, newName);
+		return;
 	}
 	
+	protected void changeID(Connection c, ServerInfo sInfo, String oldName, String newName) throws IOException
+	{		
+		NewIdentity newID = new NewIdentity(newName, oldName);
+		
+		if (newName.equals(oldName)) {
+			newID.sendJSON(c);
+			return;
+		}
+		
+		ClientInfo cInfo = c.getClientInfo();
+		
+		if (cInfo.isAuthenticated()) {
+			sInfo.changeAuthenticatedName(oldName, newName);
+		}
+		
+		c.setName(newName);
+		
+		cInfo.updateOwnedRoom(newName);
+		
+		sInfo.freeGuest(oldName);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(newID);
+		cInfo.getCurrRoom().broadcast(json);
+	}
 	
 	/**
 	 * Checks if the new name is valid.
@@ -119,6 +84,12 @@ public class IdentityChange extends Command
 		return validRegexName(newName) && !nameAlreadyExists(newName, sInfo);
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param sInfo
+	 * @return
+	 */
 	protected boolean nameAlreadyExists(String name, ServerInfo sInfo)
 	{
 		return isAuthName(name, sInfo) || isConnectedName(name, sInfo);
@@ -142,5 +113,11 @@ public class IdentityChange extends Command
 	protected boolean validRegexName(String name)
 	{
 		return name.matches("[A-Za-z][A-Za-z0-9]{5,15}");
+	}
+	
+	
+	protected boolean isGuestName(String name)
+	{
+		return name.matches("guest\\d+");
 	}
 }

@@ -43,7 +43,6 @@ public class Authenticate extends IdentityChange
 		super(identity);
 		this.type = "authenticate";
 		this.hash = hash;
-		this.identity = identity;
 	}
 
 	/**
@@ -55,44 +54,36 @@ public class Authenticate extends IdentityChange
 	{
 		ClientInfo cInfo = c.getClientInfo();
 		ServerInfo sInfo = c.getServerInfo();
-		
-		// Fail if new name doesn't match rules or if another user is logged in already
-		if (!validRegexName(identity) || isConnectedName(identity, sInfo))
-		{
-			(new AuthResponse("Invalid username.", false)).sendJSON(c);;
+		String currName = c.getName();
+			
+		// If the user is already authenticated,
+		// then they are dumb
+		if (cInfo.isAuthenticated()) {
+			// TODO send the client a message that they are dumb
+			(new AuthResponse("Already authenticated.\n"
+					+"Use '#identitychange' to change username.", false)).sendJSON(c);
 			return;
 		}
 		
+		// If name fails regex
+		boolean isInvalidNewID = !validRegexName(identity);
+		// Or it's already in use (not by current user)
+		isInvalidNewID |= !currName.equals(identity) && nameAlreadyExists(identity, sInfo);
+		
+		// Then reject it
+		if (isInvalidNewID) {
+			(new AuthResponse("Invalid username. You may want #login.", false)).sendJSON(c);;
+			return;
+		}
+		
+		// Also disallow authenticating guest names
 		if (isGuestName(identity)) {
 			(new AuthResponse("You may not authenticate as a guest.\nPick another name.", false)).sendJSON(c);
 			return;
 		}
-
-		// If the name is recorded in the authentication index,
-		// test the hash and log the user in if it matches
-		if (isAuthName(identity, sInfo)) {
-			if (!sInfo.tryExistingAuth(identity, hash)) {
-				(new AuthResponse("Incorrect username or password.", false)).sendJSON(c);;
-				return;
-			}
-			else {
-				(new AuthResponse("", true)).sendJSON(c);;
-				super.execute(c);
-				return;
-			}
-		}
+		
 		// Otherwise the name doesn't exist,
-		// so change the client's ID
-		super.execute(c);
-		
-		/*}
-		// If the user provides no new name but is already authenticated,
-		// then they are dumb
-		else if (cInfo.isAuthenticated()) {
-			// TODO send the client a message that they are dumb
-			return;
-		}*/
-		
+				
 		// Add the user to the authentication index
 		sInfo.addAuthUser(identity, hash);
 		// Mark the user's auth flag as true
@@ -100,12 +91,12 @@ public class Authenticate extends IdentityChange
 		
 		// Tell the client the new identity is authenticated
 		(new AuthResponse(identity, true)).sendJSON(c);
+		
+		// Finally, change the user's name if it's different
+		if (!currName.equals(identity)) {
+			changeID(c, sInfo, currName, identity);
+		}
 
 		return;
-	}
-	
-	private boolean isGuestName(String name)
-	{
-		return name.matches("guest\\d+");
 	}
 }

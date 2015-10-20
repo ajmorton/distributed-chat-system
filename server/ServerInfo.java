@@ -214,24 +214,16 @@ public class ServerInfo
 	 * @param oldName
 	 * @param newName
 	 */
-	public boolean changeAuthenticatedName(String oldName, String newName, String digest, String newSaltedHash){
-		
-		if(matchesPassword(oldName, digest)){
-			// old name and password work
-			authUsers.remove(oldName);
-			authUsers.put(newName, newSaltedHash);
-			return true;
-		}
-		return false;
+	public void changeAuthenticatedName(String oldName, String newName)
+	{	
+		String hash = authUsers.get(oldName);
+		authUsers.remove(oldName);
+		authUsers.put(newName, hash);
 	}
 
 	// TODO debugging method, remove later
 	public String getHash(String user){
 		return authUsers.get(user);
-	}
-	
-	public boolean verifypass(String user, String hash){
-		return matchesPassword(user, hash);
 	}
 }
 

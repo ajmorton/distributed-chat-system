@@ -13,7 +13,7 @@ import java.net.Socket;
 public class Connection extends Thread
 {
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	private BufferedReader 	in;				// used to read messages from client
 	private PrintWriter    	out;			// used to send messages to client
@@ -172,8 +172,8 @@ public class Connection extends Thread
 			return gson.fromJson(json, Quit.class);
 		case "authenticate":
 			return gson.fromJson(json, Authenticate.class);
-		case "verify":
-			return gson.fromJson(json, VerifyPassword.class);
+		case "login":
+			return gson.fromJson(json, Login.class);
 		}
 		
 		//invalid JSON received

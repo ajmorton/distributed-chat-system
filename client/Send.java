@@ -28,7 +28,7 @@ public class Send extends Thread
 
 	// TODO max buffer size 1000
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 //	private static final boolean STORE_HASH = true;
 	
 	// Console reference to read passwords quietly
@@ -68,6 +68,7 @@ public class Send extends Thread
 	public void run(){
 
 		String input;
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 						
 		while(!(quitFlag = c.getQuitFlag())){
 			
@@ -98,10 +99,13 @@ public class Send extends Thread
 
 					// convert input string to a Command object
 					Command commandObj = getCommandObj(c, firstWord, restOfInput);
+					
+					if (commandObj == null) {
+						continue;
+					}
 
 					// convert the command object to a JSON string using gson
 					
-					Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 //					Gson gson   = new Gson();
 					String json = gson.toJson(commandObj);
 					
@@ -161,47 +165,26 @@ public class Send extends Thread
 			return new Delete(restOfInput);			
 		case "#quit":
 			return new Quit();
-		case "#verify":
-			String Vpassword = VPassword();
-			String name = c.getClientName();
-			return new VerifyPassword(name, Vpassword);
 		case "#authenticate":
-			// Otherwise, change their name and authenticate them
-			String password = doPassword(c.getClientName());
-			// if passwords don't match then send as message not #authenticate
-			if(password == null) {return new Message(firstWord + " " + restOfInput);} 
-			return new Authenticate(password, restOfInput);
+			// Take a password
+			String password = takePassword("Enter password: ");
+			// Verify the user knows the password
+			String verifyPass = takePassword("Re-enter password: ");
+			if (password.equals(verifyPass)) {
+				return new Authenticate(password, restOfInput);
+			}
+			System.out.println("Passwords do not match");
+			return null;
+		case "#login":
+			password = takePassword("Enter password: ");
+			return new Login(password, restOfInput);
 		default:
 			// if the first word doesn't match any of the above switch cases it is a message
 			return new Message(firstWord + " " + restOfInput);		
 		}		
 	}
-	
-	private static String doPassword(String identity)
-	{		
-		// Get a new password from the user and simple hash it
-		// (without making a reference to the password in memory)
-		String hash = takePassword("Enter a new password: ");
 
-		// Make sure the user knows the password
-		if(hash.equals(takePassword("Confirm password: "))) {
-			
-			return hash;
-		}
-			System.out.println("Passwords do not match");
-		return null;
-	}
-	
-
-	public String enterPassword(){
-		return takePassword("Enter Password: ");
-	}
-	
-	public static String VPassword(){
-		return takePassword("Enter Password: ");
-	}
-	
-	private static String takePassword(String message)
+	public static String takePassword(String message)
 	{
 		MessageDigest md = null;
 		try {

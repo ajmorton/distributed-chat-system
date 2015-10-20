@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import commands.AuthResponse;
 import commands.Command;
 import commands.NewIdentity;
-import commands.PasswordRequest;
 import commands.RoomChange;
 import commands.RoomContents;
 import commands.RoomList;
@@ -25,7 +24,7 @@ import commands.ServerMessage;
 public class Listen extends Thread
 {
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	BufferedReader 	in;			// reads in messages from the server
 	ChatClient 		c;			// the client that the thread is in
@@ -166,8 +165,6 @@ public class Listen extends Thread
 			return gson.fromJson(json, RoomList.class);
 		case "authresponse":
 			return gson.fromJson(json, AuthResponse.class);
-		case "passwordrequest":
-			return gson.fromJson(json, PasswordRequest.class);
 		default:
 			return null;
 		}
