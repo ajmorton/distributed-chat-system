@@ -33,6 +33,9 @@ public class Delete extends Command{
 		String kickersName = c.getName();
 		if(!sInfo.inAuthIndex(kickersName)){
 			// user not authenticated, cannot delete rooms
+			Vector<Room> roomList = sInfo.getRoomList();
+			RoomList     rList    = new RoomList(roomList);
+			rList.sendJSON(c);
 			return;
 		}
 		
