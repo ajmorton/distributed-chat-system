@@ -45,10 +45,7 @@ public class RoomChange extends Command {
 		if(identity.equals(c.getClientName())){
 			// if this client has moved update current room
 			c.setRoom(roomid);
-		} else {
-			// if another client has moved print \n for formatting
-			System.out.println();
-		}
+		} 
 		
 		
 		
@@ -58,19 +55,11 @@ public class RoomChange extends Command {
 			System.out.println("The requested room is invalid or non existent");
 		} else {
 			// a client has moved rooms
-			System.out.println(identity + " moved from " + former + " to " + roomid);
+			System.out.print("\r" + identity + " moved from " + former + " to " + roomid + "\n");
 		}
 		
+				
+		c.printPrompt();
 		
-		
-		if(!identity.equals(c.getClientName())){
-			// if the moving client is not this client then don't update 
-			// this clients current room
-			c.printPrompt();
-		} else if(former.equals("") || roomid.equals("MainHall")){
-			// suppress prompt if this client just joined server or is moving to mainHall
-		} else {
-			c.printPrompt();
-		}
 	}
 }

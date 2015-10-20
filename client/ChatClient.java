@@ -104,6 +104,7 @@ public class ChatClient {
 	public Boolean 		getQuitFlag()			{return quitFlag;}
 	public String  		getMakeRoomRequest() 	{return makeRoomRequest;}
 	public boolean		getIsAuth()				{return isAuth;}
+	public String		getCurrentRoom()		{return roomName;}
 	
 	// SETTERS
 	public void setRoom(String newRoom)			{roomName = newRoom;}
@@ -119,7 +120,7 @@ public class ChatClient {
 	 * prints a prompt with the format [roomName] clientName>
 	 */
 	public void printPrompt(){
-		System.out.print("[" + roomName + "] " + clientName + "> ");
+		System.out.print("  [" + roomName + "] " + clientName + "> ");
 	}
 	
 	/**

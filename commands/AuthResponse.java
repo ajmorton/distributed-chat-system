@@ -21,6 +21,7 @@ public class AuthResponse extends Command
 	public void execute(ChatClient c)
 	{
 		if (!authSuccess) {
+			// TODO change these to \r after protocol is finished
 			System.out.println("\nAuthentication Failure: " + message);
 		}
 		else if(message.isEmpty()) {

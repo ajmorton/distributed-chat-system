@@ -169,7 +169,6 @@ public class ServerInfo
 	
 	/**
 	 * checks if an existing authenticated user can be "logged into"
-	 * TODO this assumes that authenticated user is not currently in use
 	 * 		although we could call it a "group account" feature 
 	 * @param name the name of the authenticated user
 	 * @param hash the hashed password of the authenticated user

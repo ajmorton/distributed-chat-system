@@ -25,8 +25,6 @@ import commands.*;
  */
 public class Send extends Thread
 {
-
-	// TODO max buffer size 1000
 	
 	private static final boolean DEBUG = false;
 //	private static final boolean STORE_HASH = true;
@@ -53,8 +51,9 @@ public class Send extends Thread
 	}
 
 	// GETTERS
-	public boolean getQuitFlag() {return quitFlag;}
-	public PrintWriter getOut()  {return out;}
+	public boolean getQuitFlag() 	{return quitFlag;}
+	public PrintWriter getOut()  	{return out;}
+	public BufferedReader getIn() 	{return in;}
 	
 	// SETTERS
 	public void quit() {quitFlag = true;}
@@ -112,6 +111,7 @@ public class Send extends Thread
 						System.out.println(json);
 						}
 					out.println(json);
+					
 					if (DEBUG) {System.out.println("***SENT***");}
 	
 				} else {
@@ -185,14 +185,6 @@ public class Send extends Thread
 
 		// Make sure the user knows the password
 		if(hash.equals(takePassword("Confirm password: "))) {
-
-//			TODO CredentialHash not imported, don't know where to import from
-//			if(STORE_HASH) {
-//				Gson gson = new Gson();
-//				PrintWriter pw = new PrintWriter("./chat.hash", "UTF-8");
-//				pw.println(gson.toJson(new CredentialHash(identity, hash)));
-//				pw.close();
-//			}
 			
 			return hash;
 		}

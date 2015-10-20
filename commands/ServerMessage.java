@@ -29,15 +29,16 @@ public class ServerMessage extends Command{
 	public void execute(ChatClient c){
 		
 		if(!identity.equals(c.getClientName())){
-			// if message from other client
-			// println for formatting
-			System.out.println();
+			// if message from other client overwrite current prompt line
+			// couldn't be bothered to import a formatter
+			
+			// TODO check that this will work on assessment computer --> will have to do friday
+			System.out.print("\r" + "  [" + c.getCurrentRoom() + "] " + identity + "> " + content + "                 \n");		    
 		}
-		
-		// print out message contents
-		System.out.println(identity + ": " + content);
-		
+
 		c.printPrompt();
+
+		
 							
 	}
 }
