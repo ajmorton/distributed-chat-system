@@ -185,14 +185,6 @@ public class Send extends Thread
 
 		// Make sure the user knows the password
 		if(hash.equals(takePassword("Confirm password: "))) {
-
-//			TODO CredentialHash not imported, don't know where to import from
-//			if(STORE_HASH) {
-//				Gson gson = new Gson();
-//				PrintWriter pw = new PrintWriter("./chat.hash", "UTF-8");
-//				pw.println(gson.toJson(new CredentialHash(identity, hash)));
-//				pw.close();
-//			}
 			
 			return hash;
 		}
