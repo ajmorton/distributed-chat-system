@@ -174,6 +174,7 @@ public class Send extends Thread
 				return new Authenticate(password, restOfInput);
 			}
 			System.out.println("Passwords do not match");
+			c.printPrompt();
 			return null;
 		case "#login":
 			password = takePassword("Enter password: ");

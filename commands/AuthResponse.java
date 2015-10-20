@@ -18,13 +18,13 @@ public class AuthResponse extends Command
 	{
 		if (!authSuccess) {
 			// TODO change these to \r after protocol is finished
-			System.out.println("\nAuthentication Failure: " + message);
+			System.out.println("Authentication Failure: " + message);
 		}
 		else if(message.isEmpty()) {
-			System.out.println("\nLogin Success");
+			System.out.println("Login Success");
 		} 
 		else {
-			System.out.println("\nAuthenticated Account Created");
+			System.out.println("Authenticated Account Created");
 		}
 		
 		c.printPrompt();

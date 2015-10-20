@@ -24,7 +24,7 @@ public class Login extends IdentityChange
 		
 		if (isAuthName(identity, sInfo) && !isConnectedName(identity, sInfo)) {
 			if (sInfo.tryExistingAuth(identity, hash)) {
-				(new AuthResponse("Successful Login", true)).sendJSON(c);
+				(new AuthResponse("", true)).sendJSON(c);
 				changeID(c, sInfo, currName, identity);
 				return;
 			}
