@@ -21,9 +21,6 @@ import client.CmdLineArgs;
 
 import java.io.*;
 
-import commands.Join;
-import commands.NewIdentity;
-
 /** The main class for ChatServer
  * contains server information and allows clients to join 
  * then creates a thread for each connection
@@ -93,21 +90,11 @@ public class ChatServer {
 				try{
 					Socket clientSocket = listenSocket.accept();
 
-					String     newClientName = sInfo.getNewName();
-					ClientInfo newClientInfo = new ClientInfo(sInfo);
-
+					ClientInfo newClientInfo = new ClientInfo(sInfo);	
 					// create new client connection
 					Connection c = new Connection(clientSocket, sInfo, newClientInfo);
-
-					// set the new clients id and inform client
-					NewIdentity newID = new NewIdentity(newClientName, c.getName());
-					c.setName(newClientName);
-
-					newID.sendJSON(c);
-
-					// add client to clientList and move to MainHall
 					sInfo.addClientList(c);
-					(new Join("MainHall")).execute(c);
+
 				} catch (SocketException e){
 					// TODO only occurs at server termination
 				}

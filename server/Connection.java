@@ -13,7 +13,7 @@ import java.net.Socket;
 public class Connection extends Thread
 {
 	
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	private BufferedReader 	in;				// used to read messages from client
 	private PrintWriter    	out;			// used to send messages to client
@@ -95,29 +95,14 @@ public class Connection extends Thread
 	 * operations as dictated by the message
 	 */
 	public void run(){
-		try {           
+		try {
 			
-			String json;
+			System.out.println("Execution starts");
+			executeMessage(readMessage());
+			System.out.println("Enter while loop");
+			
 			while(!terminateFlag){
-				if (DEBUG) {System.out.println("***RECEIVING***");}
-				json = in.readLine();
-				if (DEBUG) {
-					System.out.println("***RECEIVED***");
-					System.out.println(json);
-				}
-
-				// generate Command object from JSON String
-				Command command = getCommand(json);	
-
-				//invalid input, ignore and move on
-				if(command == null){
-					System.out.println("JSON Message Error");
-					continue;
-				}
-
-				// otherwise execute command
-				// operation for the command is found in the respective command classes
-				command.execute(this);
+				executeMessage(readMessage());
 			}
 
 		}catch (EOFException e){
@@ -180,4 +165,31 @@ public class Connection extends Thread
 		return null;
 	}
 	
+	private String readMessage() throws IOException
+	{		
+		if (DEBUG) {System.out.println("***RECEIVING***");}
+		String json = in.readLine();
+		if (DEBUG) {
+			System.out.println("***RECEIVED***");
+			System.out.println(json);
+		}
+
+		return json;
+	}
+	
+	private void executeMessage(String json) throws IOException
+	{
+		// generate Command object from JSON String
+		Command command = getCommand(json);	
+
+		//invalid input, ignore and move on
+		if(command == null){
+			System.out.println("JSON Message Error");
+			return;
+		}
+
+		// otherwise execute command
+		// operation for the command is found in the respective command classes
+		command.execute(this);
+	}
 }
