@@ -23,9 +23,8 @@ public class StartupResponse extends Command
 		NewIdentity newID;
 		String newClientName;
 		
-		System.out.println("StartupResponse begins");
 		
-		if (sInfo.tryExistingAuth(username, hash)) {
+		if ((!isConnectedName(username, sInfo)) && sInfo.tryExistingAuth(username, hash)) {
 			newClientName = username;
 		}
 		else {
@@ -34,14 +33,24 @@ public class StartupResponse extends Command
 
 		// set the new clients id and inform client
 		c.setName(newClientName);
-		newID = new NewIdentity(newClientName, c.getName());
+		newID = new NewIdentity(newClientName, "");
 		newID.sendJSON(c);
-		System.out.println("NewID sent.");
 
 		// add client to clientList and move to MainHall
 		(new Join("MainHall")).execute(c);
-		System.out.println("StartupResponse ends");
 		
 		return;	
 	}
+	
+	protected boolean isConnectedName(String name, ServerInfo sInfo)
+	{
+		for (Connection conn: sInfo.getAllClients()) {
+			if (conn.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
 }

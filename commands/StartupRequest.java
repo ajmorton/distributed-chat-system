@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import client.ChatClient;
@@ -25,7 +26,7 @@ public class StartupRequest extends Command
 	public void execute(ChatClient c)
 	{
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		PrintWriter pw = c.getSend().getOut();
 		BufferedReader reader = c.getSend().getIn();
 

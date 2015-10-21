@@ -1,5 +1,10 @@
 package client;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import commands.Quit;
+
 /**
  * A shutdown hook for the client class.
  * If the client is terminated via ctrl+c then shutdown hook will 
@@ -22,6 +27,11 @@ public class ShutdownHookClient extends Thread{
 	
 	public void run(){
 		// terminate all ChatClient Threads
+		Quit quit = new Quit();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+		String json = gson.toJson(quit);
+		s.getOut().println(json);
+		
 		l.quit();
 		s.quit();
 	}

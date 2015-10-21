@@ -6,6 +6,8 @@ import commands.*;
 import java.io.*;
 import java.net.Socket;
 
+import commands.StartupRequest;
+
 /** 
  * A client-server connection
  * Handles all the I/O of the server individually for each connection
@@ -13,7 +15,7 @@ import java.net.Socket;
 public class Connection extends Thread
 {
 	
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	private BufferedReader 	in;				// used to read messages from client
 	private PrintWriter    	out;			// used to send messages to client
@@ -90,36 +92,7 @@ public class Connection extends Thread
 	}
 	
 	
-	/**
-	 * listens for incoming messages from the client and the performs the 
-	 * operations as dictated by the message
-	 */
-	public void run(){
-		try {
-			
-			System.out.println("Execution starts");
-			executeMessage(readMessage());
-			System.out.println("Enter while loop");
-			
-			while(!terminateFlag){
-				executeMessage(readMessage());
-			}
-
-		}catch (EOFException e){
-			System.out.println("EOF:"+e.getMessage());
-		} catch(IOException e) {
-			System.out.println("readline:"+e.getMessage());
-		} catch (NullPointerException e){
-			// TODO only occurs at Connection termination
-			// due to readline() blocking, ready() not available for SSL
-		}finally {
-			try {
-				clientSocket.close();
-			}catch (IOException e){
-				System.out.println("IO:" + e.getMessage());
-			}
-		}
-	} 
+	
 	
 	
 	/**
@@ -133,6 +106,7 @@ public class Connection extends Thread
 		Gson       gson = new Gson();
 		JsonObject jObj = gson.fromJson(json, JsonObject.class);
 		String     type = jObj.get("type").getAsString(); 
+		
 		
 		// convert JSON string to Command Object dependent 
 		// on the type values in the JSON string
@@ -159,6 +133,8 @@ public class Connection extends Thread
 			return gson.fromJson(json, Authenticate.class);
 		case "login":
 			return gson.fromJson(json, Login.class);
+		case "startupresponse":
+			return gson.fromJson(json, StartupResponse.class);
 		}
 		
 		//invalid JSON received
@@ -182,14 +158,48 @@ public class Connection extends Thread
 		// generate Command object from JSON String
 		Command command = getCommand(json);	
 
+		
 		//invalid input, ignore and move on
 		if(command == null){
 			System.out.println("JSON Message Error");
 			return;
 		}
 
+		
 		// otherwise execute command
 		// operation for the command is found in the respective command classes
 		command.execute(this);
 	}
+	
+	/**
+	 * listens for incoming messages from the client and the performs the 
+	 * operations as dictated by the message
+	 */
+	public void run(){
+		try {
+			
+			(new StartupRequest()).sendJSON(this);
+			
+			executeMessage(readMessage());
+			
+			while(!terminateFlag){
+				executeMessage(readMessage());
+			}
+
+		}catch (EOFException e){
+			System.out.println("EOF:"+e.getMessage());
+		} catch(IOException e) {
+			System.out.println("readline:"+e.getMessage());
+		} catch (NullPointerException e){
+			// TODO only occurs at Connection termination
+			// due to readline() blocking, ready() not available for SSL
+		}finally {
+			try {
+				clientSocket.close();
+			}catch (IOException e){
+				System.out.println("IO:" + e.getMessage());
+			}
+		}
+	} 
+	
 }

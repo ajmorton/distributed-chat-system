@@ -31,6 +31,7 @@ public class NewIdentity extends Command{
 		
 		if(former.equals("")){
 			// first name assignment by server, say nothing
+			System.out.println("name from blank");
 			c.setClientName(identity);
 				
 		} else if(former.equals(identity)){
