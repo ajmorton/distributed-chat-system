@@ -46,6 +46,7 @@ public class Kick extends Command{
 		String kickersName = c.getName();
 		if(!sInfo.inAuthIndex(kickersName)){
 			// user not authenticated, cannot kick other users
+			(new ServerMessage("", c.getName())).sendJSON(c);
 			return;
 		}
 
@@ -58,6 +59,7 @@ public class Kick extends Command{
 		
 		if(!roomExists || !userExists){
 			// either the room or the user to kick do not exist
+			(new ServerMessage("", c.getName())).sendJSON(c);
 			return;
 		}
 		

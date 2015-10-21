@@ -159,7 +159,10 @@ public class Send extends Thread
 			return new CreateRoom(restOfInput);		
 		case "#kick":
 			// simple error checking
-			if((argArray.length < 3) || (argArray[1].matches("[0-9]+"))){return null;}
+			if((argArray.length < 3) || (argArray[1].matches("[0-9]+"))) {
+				c.printPrompt();
+				return null;
+			}
 			return new Kick(argArray);				
 		case "#delete":
 			return new Delete(restOfInput);			
