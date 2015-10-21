@@ -55,7 +55,12 @@ public class RoomChange extends Command {
 			System.out.println("The requested room is invalid or non existent");
 		} else {
 			// a client has moved rooms
-			System.out.print("\r" + identity + " moved from " + former + " to " + roomid + "\n");
+			if (roomid.isEmpty()) {
+				System.out.print("\r" + identity + " leaves " + former);
+			}
+			else {
+				System.out.print("\r" + identity + " moved from " + former + " to " + roomid + "\n");
+			}
 		}
 		
 				
