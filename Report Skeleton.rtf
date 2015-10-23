@@ -1,0 +1,255 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf110
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 TimesNewRomanPSMT;\f2\froman\fcharset0 Times-Roman;
+}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww12600\viewh14500\viewkind0
+\deftab720
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f0\fs36 \cf0 COVER PAGE\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\b \cf0 \
+\pard\pardeftab720\ri-1\sb240\partightenfactor0
+
+\f0 \cf0 Functionality (Maybe merge this with Protocol and Messages)
+\f2\fs18 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\b0\fs20 \cf0 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f0 \cf0 Talk talk talk intro
+\f1 \
+\pard\pardeftab720\ri-1\sb40\partightenfactor0
+
+\f0\b\fs28 \cf0 \ul \ulc0 \
+Login\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\b0\fs24 \cf0 \ulnone \
+
+\f0 Create Account\
+\
+Startup login\
+\
+Commands only available to AuthUsers 
+\f1 \
+\
+\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f0\fs28 \cf0 \ul Authorisation
+\f1 \
+\pard\pardeftab720\ri-1\sb40\partightenfactor0
+
+\f0\b\fs24 \cf0 \ulnone Login\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\b0 \cf0 \
+
+\f0 Authenticate\
+\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\fs28 \cf0 \ul \
+
+\f0 Login on startup
+\f1 \ulnone \
+\pard\pardeftab720\ri-1\sb40\partightenfactor0
+
+\f0\b\fs24 \cf0 Why messages are what they are
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f0\fs20 \cf0 Login messages response text\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\b0\fs28 \cf0 \ul \
+\page \
+\pard\pardeftab720\ri-1\sb240\partightenfactor0
+
+\f0\b\fs36 \cf0 \ulnone \
+Protocol and Messages
+\f2\fs18 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\b0\fs28 \cf0 \ul \
+
+\f0 Login
+\f1 \ulnone \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b\fs20 \cf0 \
+\{
+\f0 type: \
+\'85\
+\}\
+\
+outline function of execute
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs24 \cf0 \
+\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f0\fs28 \cf0 \ul Authenticate (create account)
+\f1 \ulnone \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b\fs20 \cf0 \
+\{
+\f0 type: \
+\'85\
+\}\
+\
+outline function of execute
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs24 \cf0 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f0\fs28 \cf0 \ul AuthResponse
+\f1 \ulnone \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b\fs20 \cf0 \
+\{
+\f0 type: \
+\'85\
+\}\
+\
+outline function of execute
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs24 \cf0 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f0\fs28 \cf0 \ul StartRequest
+\f1 \ulnone \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b\fs20 \cf0 \
+\{
+\f0 type: \
+\'85\
+\}\
+\
+outline function of execute
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs24 \cf0 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f0\fs28 \cf0 \ul StartResponse
+\f1 \ulnone \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b\fs20 \cf0 \
+\{
+\f0 type: \
+\'85\
+\}\
+\
+outline function of execute
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs24 \cf0 \
+\
+\page \
+\pard\pardeftab720\ri-1\sb240\partightenfactor0
+
+\f0\b\fs36 \cf0 \
+Security Concerns
+\f2\fs18 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\b0\fs28 \cf0 \ul \
+
+\f0 Client\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs24 \cf0 \ulnone Code injection\
+\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\f1\fs28 \cf0 \ul \
+
+\f0 Server\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs24 \cf0 \ulnone Only takes Messages from comm channel
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs28 \cf0 \ul \
+
+\f0 Communication channel\
+\pard\pardeftab720\ri-1\sb40\partightenfactor0
+
+\b\fs24 \cf0 \ulnone Eavesdropping\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs20 \cf0 Strait up reading of messages\
+	SSL\
+\
+Information Leakage\
+	Discuss
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs24 \cf0 \
+\pard\pardeftab720\ri-1\sb40\partightenfactor0
+
+\f0\b \cf0 Masquerading\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs20 \cf0 Certificate cracking\
+	Certificate lifetime, plaintext\
+
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs24 \cf0 \
+\pard\pardeftab720\ri-1\sb40\partightenfactor0
+
+\f0\b \cf0 Message tampering\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs20 \cf0 SSL \
+Code injection/Mobile code  JSON message protocol
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs24 \cf0 \
+\pard\pardeftab720\ri-1\sb40\partightenfactor0
+
+\f0\b \cf0 Replaying\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs20 \cf0 Sequence numbers in messages
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs24 \cf0 \
+\pard\pardeftab720\ri-1\sb40\partightenfactor0
+
+\f0\b \cf0 Denial of Service\
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\b0\fs20 \cf0 \'93Please Don\'92t\'94 text at start of application
+\f1 \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs28 \cf0 \ul \
+\pard\pardeftab720\ri-1\partightenfactor0
+\cf0 \ulnone \
+\pard\pardeftab720\ri-1\partightenfactor0
+
+\fs24 \cf0 \
+}
