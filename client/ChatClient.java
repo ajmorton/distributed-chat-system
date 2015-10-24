@@ -65,9 +65,9 @@ public class ChatClient {
 			// Create a default keystore instance to take the certificate
 			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
 			// Create a stream from the certificate using the class loader
-			InputStream keystoreStream = ClassLoader.getSystemResourceAsStream("resc/distribCert.jks");
+			InputStream keystoreStream = ClassLoader.getSystemResourceAsStream("resc/client.jks");
 			// Load the keystore with the password
-			keystore.load(keystoreStream, "aaaaaa".toCharArray());
+			keystore.load(keystoreStream, "bbbbbb".toCharArray());
 			// Set the trust manager to use the keystore
 			trustManagerFactory.init(keystore);
 			// Get the new trust manager
