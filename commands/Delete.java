@@ -30,19 +30,19 @@ public class Delete extends Command{
 		ServerInfo sInfo  = c.getServerInfo();
 		String     userid = c.getName();
 		
+		
 		String kickersName = c.getName();
 		if(!sInfo.inAuthIndex(kickersName)){
 			// user not authenticated, cannot delete rooms
 			// send them a list to show rooms unchanged
-			Vector<Room> roomList = sInfo.getRoomList();
-			RoomList     rList    = new RoomList(roomList);
-			rList.sendJSON(c);
+			(new ServerMessage("", c.getName())).sendJSON(c);
 			return;
 		}
 		
 		Room delRoom = sInfo.getRoom(roomid);
 		if(delRoom == null){
 			//room not found
+			(new ServerMessage("", c.getName())).sendJSON(c);
 			return;
 		}
 		
@@ -56,7 +56,7 @@ public class Delete extends Command{
 			Connection user;
 			while(inRoom.size() > 0){
 				user            = inRoom.get(0);
-				String mainHall = "mainHall";
+				String mainHall = "MainHall";
 				
 				Join join = new Join(mainHall);
 				join.execute(user);
@@ -69,7 +69,8 @@ public class Delete extends Command{
 			Vector<Room> roomList = sInfo.getRoomList();
 			RoomList     rList    = new RoomList(roomList);
 			rList.sendJSON(c);
-			
+		} else {
+			(new ServerMessage("", c.getName())).sendJSON(c);
 		}
 		
 		

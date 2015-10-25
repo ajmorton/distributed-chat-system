@@ -56,7 +56,7 @@ public class RoomChange extends Command {
 		} else {
 			// a client has moved rooms
 			if (roomid.isEmpty()) {
-				System.out.print("\r" + identity + " leaves " + former);
+				System.out.print("\r" + identity + " leaves " + former + "\n");
 			}
 			else {
 				System.out.print("\r" + identity + " moved from " + former + " to " + roomid + "\n");

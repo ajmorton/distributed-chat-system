@@ -79,6 +79,10 @@ public class Kick extends Command{
 			// move kicked user to MainHall
 			new Join("MainHall").execute(banUser);
 						
+		} else {
+			(new ServerMessage("", c.getName())).sendJSON(c);
 		}
+		
+		
 	}
 }
