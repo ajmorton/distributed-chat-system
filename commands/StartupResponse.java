@@ -29,6 +29,7 @@ public class StartupResponse extends Command
 		}
 		else {
 			newClientName = sInfo.getNewName();
+			(new AuthResponse("You have failed me for the last time!", false)).sendJSON(c);
 		}
 
 		// set the new clients id and inform client
