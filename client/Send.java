@@ -165,7 +165,8 @@ public class Send extends Thread
 			}
 			return new Kick(argArray);				
 		case "#delete":
-			return new Delete(restOfInput);			
+			return new Delete(restOfInput);	
+		case "#logout":
 		case "#quit":
 			return new Quit();
 		case "#authenticate":
