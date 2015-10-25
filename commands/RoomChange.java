@@ -58,6 +58,9 @@ public class RoomChange extends Command {
 			if (roomid.isEmpty()) {
 				System.out.print("\r" + identity + " leaves " + former + "\n");
 			}
+			else if (former.isEmpty()) {
+				System.out.print("\r" + identity + " joined " + roomid + "\n");
+			}
 			else {
 				System.out.print("\r" + identity + " moved from " + former + " to " + roomid + "\n");
 			}

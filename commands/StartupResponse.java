@@ -23,14 +23,17 @@ public class StartupResponse extends Command
 		NewIdentity newID;
 		String newClientName;
 		
-		
 		if ((!isConnectedName(username, sInfo)) && sInfo.tryExistingAuth(username, hash)) {
 			newClientName = username;
 		}
 		else {
+			if (!username.isEmpty()) {
+				(new AuthResponse("Incorrect username or password\nLogging you in as guest...", false)).sendJSON(c);;
+			}
 			newClientName = sInfo.getNewName();
-			(new AuthResponse("You have failed me for the last time!", false)).sendJSON(c);
 		}
+		
+		
 
 		// set the new clients id and inform client
 		c.setName(newClientName);
