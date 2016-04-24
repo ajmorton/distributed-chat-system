@@ -14,9 +14,9 @@ import com.beust.jcommander.Parameter;
  */
 public class CmdLineArgs
 {
-	@Parameter(description = "Host to connect to")
+	@Parameter(description   = "Host to connect to")
 	public List<String> host = new ArrayList<>();
 	
 	@Parameter(names = "-p", description = "Port to connect over")
-	public int port = 4444;
+	public int port  = 4444;
 }
